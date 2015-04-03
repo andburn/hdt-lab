@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Hearthstone_Deck_Tracker.Hearthstone;
+using System.IO;
+
 namespace AndBurn.HDT.Plugins.CardCollection
 {
     public class CollectionExporter
     {
-        public static string[] GetCardList(string filepath = null)
+        public static List<Card> GetCardList(string filepath = null)
         {
             if (filepath == null)
             {
@@ -20,14 +23,22 @@ namespace AndBurn.HDT.Plugins.CardCollection
             }
         }
 
-        private static string[] GetCardListFromFile(string filepath)
+        private static List<Card> GetCardListFromFile(string filepath)
         {
-            return null;
+            List<Card> cards = new List<Card>();
+            // TODO: File IO checks
+            string[] file = File.ReadAllLines(filepath);
+            foreach (var line in file)
+            {
+                // TODO: check for unknown card?
+                cards.Add(Game.GetCardFromName(line));
+            }
+            return cards;
         }
 
-        private static string[] GetCardListFromDB()
+        private static List<Card> GetCardListFromDB()
         {
-            return null;
+            return Game.GetActualCards();
         }
     }
 }
