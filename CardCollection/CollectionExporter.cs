@@ -26,12 +26,17 @@ namespace AndBurn.HDT.Plugins.CardCollection
         private static List<Card> GetCardListFromFile(string filepath)
         {
             List<Card> cards = new List<Card>();
-            // TODO: File IO checks
-            string[] file = File.ReadAllLines(filepath);
-            foreach (var line in file)
+            try
             {
-                // TODO: check for unknown card?
-                cards.Add(Game.GetCardFromName(line));
+                string[] file = File.ReadAllLines(filepath);
+                foreach (var line in file)
+                {
+                    cards.Add(Game.GetCardFromName(line));
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Write("Exception: " + e.Message, "GetCardListFromFile");
             }
             return cards;
         }
@@ -39,6 +44,24 @@ namespace AndBurn.HDT.Plugins.CardCollection
         private static List<Card> GetCardListFromDB()
         {
             return Game.GetActualCards();
+        }
+    }
+
+    public class CardCount
+    {
+        public int Standard { get; set; }
+        public int Golden { get; set; }
+
+        public CardCount()
+        {
+            Standard = 0;
+            Golden = 0;
+        }
+
+        public CardCount(int standard, int golden)
+        {
+            Standard = standard;
+            Golden = golden;
         }
     }
 }
