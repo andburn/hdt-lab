@@ -46,22 +46,4 @@ namespace AndBurn.HDT.Plugins.CardCollection
             return Game.GetActualCards();
         }
     }
-
-    public class CardCount
-    {
-        public int Standard { get; set; }
-        public int Golden { get; set; }
-
-        public CardCount()
-        {
-            Standard = 0;
-            Golden = 0;
-        }
-
-        public CardCount(int standard, int golden)
-        {
-            Standard = standard;
-            Golden = golden;
-        }
-    }
 }

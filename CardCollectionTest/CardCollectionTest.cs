@@ -44,19 +44,66 @@ namespace AndBurn.HDT.Plugins.CardCollection
         }
 
         [TestMethod]
+        public void TestImageNoMatches()
+        {
+            Assert.AreEqual(new CardCount(), 
+                ImageAnalyzer.Recognize(@"Files\no_matches.bmp"));
+        }
+
+        [TestMethod]
         public void TestImageStandardByOne()
         {
-            var count = ImageAnalyzer.Recognize(@"Files\standard_1_0.bmp");
-            Assert.AreEqual(1, count.Standard);
-            Assert.AreEqual(0, count.Golden);
+            Assert.AreEqual(new CardCount(1, 0), 
+                ImageAnalyzer.Recognize(@"Files\standard_1_0.bmp"));
         }
 
         [TestMethod]
         public void TestImageStandardByTwo()
         {
-            var count = ImageAnalyzer.Recognize(@"Files\standard_2_0.bmp");
-            Assert.AreEqual(2, count.Standard);
-            Assert.AreEqual(0, count.Golden);
+            Assert.AreEqual(new CardCount(2, 0), 
+                ImageAnalyzer.Recognize(@"Files\standard_2_0.bmp"));
+        }
+
+        [TestMethod]
+        public void TestImageStandardByOneGoldByOne()
+        {
+            Assert.AreEqual(new CardCount(1, 1), 
+                ImageAnalyzer.Recognize(@"Files\standard_1_1.bmp"));
+        }
+
+        [TestMethod]
+        public void TestImageStandardByTwoGoldByOne()
+        {
+            Assert.AreEqual(new CardCount(2, 1), 
+                ImageAnalyzer.Recognize(@"Files\standard_2_1.bmp"));
+        }
+
+        [TestMethod]
+        public void TestImageGoldByOne()
+        {
+            Assert.AreEqual(new CardCount(0, 1), 
+                ImageAnalyzer.Recognize(@"Files\standard_0_1.bmp"));
+        }
+
+        [TestMethod]
+        public void TestImageStandardByTwoGoldByTwo()
+        {
+            Assert.AreEqual(new CardCount(2, 2),
+                ImageAnalyzer.Recognize(@"Files\standard_2_2.bmp"));
+        }
+
+        [TestMethod]
+        public void TestImageLegendByOne()
+        {
+            Assert.AreEqual(new CardCount(1, 0),
+                ImageAnalyzer.Recognize(@"Files\legend_1_0.bmp", true));
+        }
+
+        [TestMethod]
+        public void TestImageLegendGoldByOne()
+        {
+            Assert.AreEqual(new CardCount(0, 1),
+                ImageAnalyzer.Recognize(@"Files\legend_0_1.bmp", true));
         }
     }
 }
