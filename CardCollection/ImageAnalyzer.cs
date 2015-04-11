@@ -14,11 +14,11 @@ namespace AndBurn.HDT.Plugins.CardCollection
         public static CardCount Recognize(string file, bool legend = false)
         {
             CardCount count = new CardCount();
-            CardPositions pos = new CardPositions(1920, 1080);
             try
             {
                 // full screen capture
                 var bmp = new Bitmap(file);
+                CardPositions pos = new CardPositions(bmp.Width, bmp.Height);
                 // 1 - Check for existence at position 0
                 var exists1 = ReadRegion(bmp, pos.Get(0, RegionType.Mana), 90, 360, 0, 1);
                 if (exists1)
@@ -76,12 +76,14 @@ namespace AndBurn.HDT.Plugins.CardCollection
             }
             var regionBitmap = bmp.Clone(
                 new Rectangle(region.Point, region.Size), PixelFormat.Format32bppArgb);
-            // TEMP
-            //regionBitmap.Save(region.Size.Width + minHue + ".bmp", ImageFormat.Bmp);
+            // TODO: Remove
+            //var ts = DateTime.Now.ToString("HHmmssff");
+            //regionBitmap.Save(ts + ".png", ImageFormat.Png);
+            // ---
             var hb = GetAverageHueAndBrightness(regionBitmap);
             var hue = hb.Hue;
             var brightness = hb.Brightness;
-            Console.Write("[{0} Hue:{1} Bri:{2}]\n", region.Size, Math.Round(hue, 4), Math.Round(brightness, 4));
+            Console.Write("[{1} @ {0} - Hue:{2} Bri:{3}]\n", region.Point, region.Size, Math.Round(hue, 4), Math.Round(brightness, 4));
             regionBitmap.Dispose();
             return (hue >= minHue && hue <= maxHue) && (brightness >= minBrightness && brightness <= maxBrightness);
         }

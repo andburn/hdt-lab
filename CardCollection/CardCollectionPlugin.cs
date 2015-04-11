@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 using Hearthstone_Deck_Tracker.Plugins;
 
@@ -55,5 +56,9 @@ namespace AndBurn.HDT.Plugins.CardCollection
             // open dialog with the details, ok and cancel buttons
         }
 
+        public MenuItem MenuItem
+        {
+            get { return null; }
+        }
     }
 }

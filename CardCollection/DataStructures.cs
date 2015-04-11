@@ -11,13 +11,16 @@ namespace AndBurn.HDT.Plugins.CardCollection
     {
         private const double xOffset = 0.167;
 
-        private Size ManaSize = new Size(40, 40);
-        private Size GoldSize = new Size(24, 24);
-        private Size CountSize = new Size(0, 0);
+        private const double ManaSize = 0.037;
+        private const double GoldSize = 0.022;
+        private const double CountSize = 0;
+
         private PointF ManaPoint = new PointF(0.039F, 0.169F);
         private PointF GoldPoint = new PointF(0.168F, 0.183F);
         private PointF GoldLegendPoint = new PointF(0.043F, 0.285F);
         private PointF CountPoint = new PointF(0.1F, 0.453F);
+
+        private const double DimensionScale = 0.037;
 
         private int xPixelOffset;
 
@@ -41,14 +44,16 @@ namespace AndBurn.HDT.Plugins.CardCollection
             Count = CalculateAllPositions(CountPoint, CountSize);
         }
 
-        private CardRegion[] CalculateAllPositions(PointF p, Size s)
+        private CardRegion[] CalculateAllPositions(PointF p, double d)
         {
             CardRegion[] regions = new CardRegion[4];
+            // calculate the scaled square size
+            var dim = (int)Math.Round(Height * d);
             // top row (0-3)
             for (var i = 0; i < 4; i++)
             {
                 var tmp = new PointF((float)(p.X + i * xOffset), p.Y);
-                regions[i] = new CardRegion(ToPixelCoordinates(tmp), s);
+                regions[i] = new CardRegion(ToPixelCoordinates(tmp), new Size(dim, dim));
             }
             // bottom row (4-7), may be unecessary
             return regions;
