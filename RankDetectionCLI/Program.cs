@@ -1,9 +1,6 @@
 ﻿using Hearthstone;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Hearthstone.Ranked;
+using System.Drawing;
 
 namespace RankDetectionCLI
 {
@@ -16,6 +13,12 @@ namespace RankDetectionCLI
                 if (args[0].ToLower() == "create")
                 {
                     RankTemplate.Create(args[1], args[2]);
+                }
+                else if (args[0].ToLower() == "match")
+                {
+                    RankDetection.SetTemplateLocation(args[2]);
+                    var match = RankDetection.Match(new Bitmap(args[1]));
+                    System.Console.WriteLine(match);
                 }
             }            
         }
