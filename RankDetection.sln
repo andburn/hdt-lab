@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankDetection", "RankDetect
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankDetectionCLI", "RankDetectionCLI\RankDetectionCLI.csproj", "{30481AA1-C8F4-4770-A707-F1697CBD4511}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankDetectionTest", "RankDetectionTest\RankDetectionTest.csproj", "{10AC998B-D697-4A7B-AC45-1C9E3B117C55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{30481AA1-C8F4-4770-A707-F1697CBD4511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30481AA1-C8F4-4770-A707-F1697CBD4511}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30481AA1-C8F4-4770-A707-F1697CBD4511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10AC998B-D697-4A7B-AC45-1C9E3B117C55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10AC998B-D697-4A7B-AC45-1C9E3B117C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10AC998B-D697-4A7B-AC45-1C9E3B117C55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10AC998B-D697-4A7B-AC45-1C9E3B117C55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

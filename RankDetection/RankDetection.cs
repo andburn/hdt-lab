@@ -10,7 +10,7 @@ namespace Hearthstone.Ranked
 {
     public class RankDetection
     {
-        private static readonly float _threshold = 0.85f;
+        private static readonly float _threshold = 0.9f;
         private static readonly Size _templateSize = new Size(24, 24);
         private static readonly Point _playerLocation = new Point(26, 36);
         private static readonly Point _opponentLocation = new Point(26, 654);
@@ -109,6 +109,12 @@ namespace Hearthstone.Ranked
         private static int FindBest(Bitmap bmp)
         {
             List<RankMatch> results = CompareAll(bmp);
+
+            foreach (var r in results)
+            {
+                Console.WriteLine("{0}: {1}", r.Rank, r.Score);
+            }
+
             if (results.Count > 0)
             {
                 return results[0].Rank;
@@ -146,7 +152,14 @@ namespace Hearthstone.Ranked
     {
         public int Player { get; set; }
         public int Opponent { get; set; }
-        public bool Success { get; set; }
+        public bool Success
+        {
+            get
+            {
+                // TODO: what about when only one is -1
+                return Player >= 0 && Opponent >= 0;
+            }
+        }
 
         public override string ToString()
         {
@@ -179,7 +192,8 @@ namespace Hearthstone.Ranked
 
         public int CompareTo(RankMatch other)
         {
-            return this.Score.CompareTo(other.Score);
+            // descending
+            return other.Score.CompareTo(this.Score);
         }
 
         public bool Equals(RankMatch other)
