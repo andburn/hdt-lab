@@ -17,7 +17,7 @@ namespace RankDetectionCLI
                 else if (args[0].ToLower() == "match")
                 {
                     RankDetection.SetTemplateLocation(args[2]);
-                    var match = RankDetection.Match(new Bitmap(args[1]));
+                    var match = RankDetection.Match(new Bitmap(args[1]), true);
                     System.Console.WriteLine(match);
                 }
             }            

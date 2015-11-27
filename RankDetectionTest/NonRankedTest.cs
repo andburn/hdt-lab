@@ -9,58 +9,37 @@ namespace RankDetectionTest
     public class NonRankedTest
     {
         [TestMethod]
-        public void NonRankedGame_IsNotSuccessful_hi()
+        public void NonRankedGame_IsNotSuccessful()
         {
-            var result = RankDetection.Match(new Bitmap(@"data\HsGameAiHi.png"));
+            var result = RankDetection.Match(new Bitmap(@"data\HsGameAi.png"));
             Assert.IsFalse(result.Success);
         }
 
         [TestMethod]
-        public void NonRankedGame_IsNotSuccessful_lo()
+        public void MenuA_IsNotSuccessful()
         {
-            var result = RankDetection.Match(new Bitmap(@"data\HsGameAiLo.png"));
+            var result = RankDetection.Match(new Bitmap(@"data\HsMenuA.png"));
             Assert.IsFalse(result.Success);
         }
 
         [TestMethod]
-        public void MenuA_IsNotSuccessful_hi()
+        public void MenuB_IsNotSuccessful()
         {
-            var result = RankDetection.Match(new Bitmap(@"data\HsMenuAHi.png"));
+            var result = RankDetection.Match(new Bitmap(@"data\HsMenuB.png"));
             Assert.IsFalse(result.Success);
         }
 
         [TestMethod]
-        public void MenuA_IsNotSuccessful_lo()
+        public void NonRankedFriendsList_IsNotSuccessful()
         {
-            var result = RankDetection.Match(new Bitmap(@"data\HsMenuALo.png"));
+            var result = RankDetection.Match(new Bitmap(@"data\HsGameAiFriends.png"));
             Assert.IsFalse(result.Success);
         }
 
         [TestMethod]
-        public void MenuB_IsNotSuccessful_hi()
+        public void RankedFriendsList_IsNotSuccessful()
         {
-            var result = RankDetection.Match(new Bitmap(@"data\HsMenuBHi.png"));
-            Assert.IsFalse(result.Success);
-        }
-
-        [TestMethod]
-        public void MenuB_IsNotSuccessful_lo()
-        {
-            var result = RankDetection.Match(new Bitmap(@"data\HsMenuBLo.png"));
-            Assert.IsFalse(result.Success);
-        }
-
-        [TestMethod]
-        public void NonRankedFriendsList_IsNotSuccessful_hi()
-        {
-            var result = RankDetection.Match(new Bitmap(@"data\HsGameAiFriendsHi.png"));
-            Assert.IsFalse(result.Success);
-        }
-
-        [TestMethod]
-        public void NonRankedFriendsList_IsNotSuccessful_lo()
-        {
-            var result = RankDetection.Match(new Bitmap(@"data\HsGameAiFriendsLo.png"));
+            var result = RankDetection.Match(new Bitmap(@"data\HsGameRankedFriends.png"));
             Assert.IsFalse(result.Success);
         }
 

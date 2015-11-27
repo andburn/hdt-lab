@@ -12,18 +12,20 @@ namespace Hearthstone.Ranked
     {
         private static readonly float _threshold = 0.9f;
         private static readonly Size _templateSize = new Size(24, 24);
-        private static readonly Point _playerLocation = new Point(26, 36);
-        private static readonly Point _opponentLocation = new Point(26, 654);
+        private static readonly Point _opponentLocation = new Point(26, 36);
+        private static readonly Point _playerLocation = new Point(26, 650);
 
         private static ExhaustiveTemplateMatching _templateMatcher;
         private static string _templateLocation;
         private static Dictionary<int, Bitmap> _templates;
+		private static bool _debug;
 
         static RankDetection()
         {
             _templateLocation = @".\Images";
             _templateMatcher = new ExhaustiveTemplateMatching(_threshold);
             _templates = new Dictionary<int, Bitmap>();
+			_debug = false;
             LoadTemplates();
         }
 
@@ -40,8 +42,9 @@ namespace Hearthstone.Ranked
             }
         }
 
-        public static RankResult Match(Bitmap bmp)
+        public static RankResult Match(Bitmap bmp, bool debug = false)
         {
+			_debug = debug;
             RankCapture capture = ProcessImage(bmp);
             RankResult result = new RankResult();
             result.Player = FindBest(capture.Player);
@@ -58,8 +61,15 @@ namespace Hearthstone.Ranked
             Rectangle playerRect = new Rectangle(_playerLocation.X, _playerLocation.Y,
                 _templateSize.Width, _templateSize.Height);
 
-            Bitmap opponent = CropRect(bmp, opponentRect);
-            Bitmap player = CropRect(bmp, playerRect);
+            Bitmap opponent = CropRect(scaled, opponentRect);
+            Bitmap player = CropRect(scaled, playerRect);
+
+			if (_debug)
+			{
+				var ts = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                opponent.Save(ts + "_opponent.png");
+				player.Save(ts + "_player.png");
+			}
 
             return new RankCapture(player, opponent);
         }
@@ -70,10 +80,10 @@ namespace Hearthstone.Ranked
             using (Graphics g = Graphics.FromImage(target))
             {
                 // set graphic quality settings
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = SmoothingMode.HighQuality;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                g.CompositingQuality = CompositingQuality.HighQuality;
+                //g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                //g.SmoothingMode = SmoothingMode.HighQuality;
+                //g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                //g.CompositingQuality = CompositingQuality.HighQuality;
                 g.DrawImage(bmp, 
                     new Rectangle(0, 0, target.Width, target.Height), rect, GraphicsUnit.Pixel);
             }
@@ -82,19 +92,23 @@ namespace Hearthstone.Ranked
 
         private static Bitmap ResizeImage(Bitmap original)
         {
-            double ratio = 4.0 / 3.0;
-            int height = 768;
-            int width = Convert.ToInt32(height * ratio);
+			int height = 768;
+
+			if(original.Height == height)
+				return original;
+
+			double ratio = 4.0 / 3.0;            
+			int width = Convert.ToInt32(height * ratio);
 
             int cropWidth = Convert.ToInt32(original.Height * ratio);
             int posX = 0;// Convert.ToInt32((original.Width - cropWidth) / 2);
 
             Bitmap scaled = new Bitmap(width, height);
             Graphics graphic = Graphics.FromImage(scaled);
-            graphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            graphic.SmoothingMode = SmoothingMode.HighQuality;
-            graphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            graphic.CompositingQuality = CompositingQuality.HighQuality;
+            //graphic.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            //graphic.SmoothingMode = SmoothingMode.HighQuality;
+            //graphic.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //graphic.CompositingQuality = CompositingQuality.HighQuality;
 
             graphic.DrawImage(original,
                 new Rectangle(0, 0, width, height),
@@ -103,17 +117,26 @@ namespace Hearthstone.Ranked
 
             graphic.Dispose();
 
-            return new Bitmap(scaled);
+			if (_debug)
+			{
+				var ts = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+				scaled.Save(ts + "_resize.png");
+			}
+
+            return scaled;
         }
 
         private static int FindBest(Bitmap bmp)
         {
             List<RankMatch> results = CompareAll(bmp);
 
-            foreach (var r in results)
-            {
-                Console.WriteLine("{0}: {1}", r.Rank, r.Score);
-            }
+			if(_debug)
+			{
+				for(var i = 0; i < 3 && i < results.Count; i++)
+				{
+					Console.WriteLine("{0}: {1}", results[i].Rank, results[i].Score);
+				}
+			}
 
             if (results.Count > 0)
             {
@@ -125,7 +148,6 @@ namespace Hearthstone.Ranked
         private static List<RankMatch> CompareAll(Bitmap sample)
         {
             List<RankMatch> results = new List<RankMatch>();
-            // TODO: adjust param
             
             foreach (var t in _templates)
             {
