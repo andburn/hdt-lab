@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 
@@ -11,7 +10,9 @@ namespace Hearthstone.Ranked
     public class RankDetection
     {
         private static readonly float _threshold = 0.9f;
-        private static readonly Size _templateSize = new Size(24, 24);
+		private static readonly double _legendMinHue = 36.5;
+		private static readonly double _legendMinBrightness = 0.36;
+		private static readonly Size _templateSize = new Size(24, 24);
         private static readonly Point _opponentLocation = new Point(26, 36);
         private static readonly Point _playerLocation = new Point(26, 650);
 
@@ -31,8 +32,8 @@ namespace Hearthstone.Ranked
 
         private static void LoadTemplates()
         {
-            // files should be named [0..25].bmp
-            for (var i = 0; i <= 25; i++)
+            // files should be named [1..25].bmp
+            for (var i = 1; i <= 25; i++)
             {
                 var path = Path.Combine(_templateLocation, i + ".bmp");
                 if (File.Exists(path))
@@ -126,7 +127,7 @@ namespace Hearthstone.Ranked
             return scaled;
         }
 
-        private static int FindBest(Bitmap bmp)
+        public static int FindBest(Bitmap bmp)
         {
             List<RankMatch> results = CompareAll(bmp);
 
@@ -138,14 +139,26 @@ namespace Hearthstone.Ranked
 				}
 			}
 
+			var rank = -1;
             if (results.Count > 0)
             {
-                return results[0].Rank;
-            }
-            return -1;
+                rank = results[0].Rank;
+			}
+			else if (IsLegendRank(bmp))
+			{
+				rank = 0;
+			}
+			return rank;
         }
 
-        private static List<RankMatch> CompareAll(Bitmap sample)
+		private static bool IsLegendRank(Bitmap bmp)
+		{
+			var b = HueAndBrightness.GetAverage(bmp).Brightness;
+			var h = HueAndBrightness.GetAverage(bmp).Hue;
+            return b > _legendMinBrightness && h > _legendMinHue;
+		}
+
+		private static List<RankMatch> CompareAll(Bitmap sample)
         {
             List<RankMatch> results = new List<RankMatch>();
             

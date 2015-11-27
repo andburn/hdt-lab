@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HueAndBrightness.cs" />
     <Compile Include="RankDetection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RankTemplate.cs" />
