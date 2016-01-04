@@ -1,19 +1,22 @@
 (function() {
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-  camera.position.z = 4;
+  var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+  camera.position.y = 2.6;
+  camera.lookAt(scene.position);
+  camera.rotateOnAxis(new THREE.Vector3( 0, 0, 1 ), -1.57);
 
-  var renderer = new THREE.WebGLRenderer();
+  var renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
   renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setClearColor( 0xffffff, 0);
   document.body.appendChild( renderer.domElement );
 
-  var mapSrc = "images/minion.png";
-  var map = THREE.ImageUtils.loadTexture(mapSrc);
-
-  var geometry = new THREE.PlaneGeometry( 3, 3 );
-  var material = new THREE.MeshBasicMaterial( { map: map } );
-  var plane = new THREE.Mesh( geometry, material );
-  scene.add( plane );
+  components.base(scene);
+  components.portrait(scene);
+  components.namebanner(scene);
+  components.description(scene);
+  components.dragon(scene);
+  components.raceplate(scene);
+  components.rarityFrame(scene);
 
   function render() {
   	requestAnimationFrame( render );
