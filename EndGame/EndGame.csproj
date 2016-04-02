@@ -30,8 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HearthDb, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\HearthDb.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="HearthstoneDeckTracker">
       <HintPath>..\..\lib\HearthstoneDeckTracker.exe</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MahApps.Metro, Version=1.1.2.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -62,6 +68,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Archetype\ArchetypeCard.cs" />
+    <Compile Include="Enums\Enums.cs" />
     <Compile Include="Controls\NoteDialog.xaml.cs">
       <DependentUpon>NoteDialog.xaml</DependentUpon>
     </Compile>
