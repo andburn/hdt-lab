@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Card Renderer</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script type="x-shader/x-vertex" id="vertexshader">
+
+			// switch on high precision floats
+			#ifdef GL_ES
+			precision highp float;
+			#endif
+
+			uniform sampler2D mainTexture;
+			uniform vec4 mainTextureST;
+
+			varying vec2 vUv;
+			varying vec3 vColor;
+
+			void main() {
+				vUv = uv;
+
+				vec4 opos;
+				vec2 otex;
+				vec4 ipos = vec4(position, 1.3);
+				mat4 mvp = projectionMatrix * modelViewMatrix;
+
+				opos.x = dot(mvp[0], ipos);
+				opos.y = dot(mvp[1], ipos);
+				opos.z = dot(mvp[2], ipos);
+				opos.w = dot(mvp[3], ipos);
+
+				otex = uv * mainTextureST.xy + mainTextureST.zw;
+
+				vec4 ambient = vec4(0.7, 0, 0, 0);
+				vec4 lightColor = vec4(0.5, 0, 0, 0);
+				float lightingBlend = 0.0;
+
+				vec4 r0 = ambient;
+				float r1 = 2.0;
+				r0 = r0 * r1 + lightColor;
+				vec4 rColor = vec4(color, 1.0);
+				r0 = r0 - rColor;
+				r0 = lightingBlend * r0 + rColor;
+				vColor = r0.xyz;
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentshader">
+
+			// switch on high precision floats
+			#ifdef GL_ES
+			precision highp float;
+			#endif
+
+			uniform sampler2D mainTexture;
+
+			varying vec2 vUv;
+			varying vec3 vColor;
+
+			void main() {
+
+				vec4 r0 = texture2D(mainTexture, vUv);
+
+				gl_FragColor = r0 * vec4(vColor, 1.0);
+
+			}
+
+		</script>
+		<script src="js/three.js"></script>
+		<script src="js/loaders/OBJLoader.js"></script>
+		<script src="js/components.js"></script>
+		<script src="js/main.js"></script>
+	</body>
+</html>
