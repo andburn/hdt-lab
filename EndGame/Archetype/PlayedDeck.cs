@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HDT.Plugins.EndGame.Enums;
 using Hearthstone_Deck_Tracker.Enums;
@@ -22,12 +23,18 @@ namespace HDT.Plugins.EndGame.Archetype
 			Klass = ConvertKlass(klass);
 			Format = format;
 			Turns = turns;
-			Cards = cards.Select(x => new Card(x)).ToList();
+			Cards = cards.Select(x => new SingleCard(x)).ToList<Card>();
+		}
+
+		public double Similarity(Deck deck)
+		{
+			var found = deck.Cards.Count(c => this.Cards.Contains(c));
+			return Math.Round(found / (double)deck.Cards.Count, 2);
 		}
 
 		public bool Matches(Deck deck)
 		{
-			return deck.Cards.All(c => this.Cards.Contains(c));
+			return Similarity(deck) > 0.5;
 		}
 
 		private PlayerClass ConvertKlass(string klass)

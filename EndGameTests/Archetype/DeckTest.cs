@@ -32,10 +32,57 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		#endregion Additional test attributes
 
 		[TestMethod]
-		public void HowToCompare()
+		public void Similarity1()
+		{
+			Deck control = new Deck(
+				"Control Warrior",
+				PlayerClass.WARRIOR,
+				ArchetypeStyles.CONTROL,
+				new List<Card>() {
+					new SingleCard("OG_123"),
+					new SingleCard("OG_789"),
+					new SingleCard("OG_456"),
+				}
+			);
+
+			PlayedDeck opponent = new PlayedDeck("Warrior", Format.Standard, 7,
+				new List<TrackedCard>() {
+					new TrackedCard("OG_123", 2),
+					new TrackedCard("OG_124", 1)
+				}
+			);
+
+			Assert.AreEqual(0.33, opponent.Similarity(control));
+		}
+
+		[TestMethod]
+		public void Similarity3()
+		{
+			Deck control = new Deck(
+				"Control Warrior",
+				PlayerClass.WARRIOR,
+				ArchetypeStyles.CONTROL,
+				new List<Card>() {
+					new SingleCard("OG_123"),
+					new SingleCard("OG_789")
+				}
+			);
+
+			PlayedDeck opponent = new PlayedDeck("Warrior", Format.Standard, 7,
+				new List<TrackedCard>() {
+					new TrackedCard("OG_123", 2),
+					new TrackedCard("OG_124", 1)
+				}
+			);
+
+			Assert.AreEqual(0.5, opponent.Similarity(control));
+		}
+
+		[TestMethod]
+		public void Similarity2()
 		{
 			List<Card> cards = new List<Card>() {
-				new Card("OG_123", 2)
+				new SingleCard("OG_123")
 			};
 			Deck control = new Deck(
 				"Control Warrior",
@@ -49,7 +96,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			};
 			PlayedDeck opponent = new PlayedDeck("Warrior", Format.Standard, 7, tracked);
 
-			Assert.IsTrue(opponent.Matches(control));
+			Assert.AreEqual(1.0, opponent.Similarity(control));
 		}
 	}
 }

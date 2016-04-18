@@ -43,7 +43,7 @@ namespace HDT.Plugins.EndGame.Archetype
 			return Id == ac.Id && Count == ac.Count;
 		}
 
-		public bool Equals(Card obj)
+		public virtual bool Equals(Card obj)
 		{
 			if (obj == null)
 			{
@@ -53,7 +53,7 @@ namespace HDT.Plugins.EndGame.Archetype
 			return Id == obj.Id && Count == obj.Count;
 		}
 
-		public bool Equals(TrackedCard obj)
+		public virtual bool Equals(TrackedCard obj)
 		{
 			if (obj == null)
 			{
