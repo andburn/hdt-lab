@@ -54,7 +54,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Archetype\CardTest.cs" />
-    <Compile Include="Archetype\DeckTest.cs" />
+    <Compile Include="Archetype\ArchetypeDeckTest.cs" />
+    <Compile Include="Archetype\PlayedDeckTest.cs" />
     <Compile Include="Archetype\SingleCardTest.cs" />
     <Compile Include="NamingPatternTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

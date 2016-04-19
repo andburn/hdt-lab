@@ -4,24 +4,62 @@ using Hearthstone_Deck_Tracker.Enums;
 
 namespace HDT.Plugins.EndGame.Archetype
 {
-	public class Deck
+	public abstract class Deck
 	{
-		public string Name { get; set; }
 		public PlayerClass Klass { get; set; }
 		public Format Format { get; set; }
-		public ArchetypeStyle Style { get; set; }
 		public List<Card> Cards { get; set; }
 
 		public Deck()
 		{
 		}
 
-		public Deck(string name, PlayerClass klass, ArchetypeStyle style, List<Card> cards)
+		public Deck(PlayerClass klass, Format format, List<Card> cards)
 		{
-			Name = name;
 			Klass = klass;
-			Style = style;
+			Format = format;
 			Cards = cards;
+		}
+
+		public Deck(string klass, Format format, List<Card> cards)
+		{
+			Klass = ConvertKlass(klass);
+			Format = format;
+			Cards = cards;
+		}
+
+		private PlayerClass ConvertKlass(string klass)
+		{
+			switch (klass.ToLowerInvariant())
+			{
+				case "druid":
+					return PlayerClass.DRUID;
+
+				case "hunter":
+					return PlayerClass.HUNTER;
+
+				case "mage":
+					return PlayerClass.MAGE;
+
+				case "paladin":
+					return PlayerClass.PALADIN;
+
+				case "priest":
+					return PlayerClass.PRIEST;
+
+				case "rogue":
+					return PlayerClass.ROGUE;
+
+				case "shaman":
+					return PlayerClass.SHAMAN;
+
+				case "warlock":
+					return PlayerClass.WARLOCK;
+
+				case "warrior":
+				default:
+					return PlayerClass.WARRIOR;
+			}
 		}
 	}
 }
