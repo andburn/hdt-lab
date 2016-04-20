@@ -1,9 +1,10 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using Hearthstone_Deck_Tracker.Stats;
 
 namespace HDT.Plugins.EndGame.Archetype
 {
-	public class Card
+	public class Card : IEquatable<Card>, IComparable<Card>
 	{
 		[XmlAttribute]
 		public string Id { get; set; }
@@ -66,6 +67,11 @@ namespace HDT.Plugins.EndGame.Archetype
 		public override int GetHashCode()
 		{
 			return Id.GetHashCode() ^ Count;
+		}
+
+		public int CompareTo(Card other)
+		{
+			return Equals(other) ? 0 : Id.CompareTo(other.Id); // QU ignore count
 		}
 
 		public override string ToString()

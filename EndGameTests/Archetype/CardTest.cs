@@ -80,6 +80,17 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		}
 
 		[TestMethod]
+		public void TestCompareTo()
+		{
+			var one = new Card("OG_123", 2);
+			var two = new Card("XY_456", 2);
+			var three = new Card("AB_789", 1);
+			Assert.AreEqual(0, one.CompareTo(one));
+			Assert.AreEqual(1, two.CompareTo(three));
+			Assert.AreEqual(-1, three.CompareTo(two));
+		}
+
+		[TestMethod]
 		public void TestToString()
 		{
 			var card = new Card("OG_123", 2);

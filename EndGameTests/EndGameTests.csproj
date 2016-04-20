@@ -48,13 +48,17 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Archetype\ArchetypeManagerTest.cs" />
     <Compile Include="Archetype\CardTest.cs" />
     <Compile Include="Archetype\ArchetypeDeckTest.cs" />
+    <Compile Include="Archetype\DeckTest.cs" />
     <Compile Include="Archetype\PlayedDeckTest.cs" />
     <Compile Include="Archetype\SingleCardTest.cs" />
     <Compile Include="NamingPatternTest.cs" />

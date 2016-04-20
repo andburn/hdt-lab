@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HDT.Plugins.EndGame.Enums;
 using Hearthstone_Deck_Tracker.Enums;
 
@@ -26,6 +27,31 @@ namespace HDT.Plugins.EndGame.Archetype
 			Klass = ConvertKlass(klass);
 			Format = format;
 			Cards = cards;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+
+			Deck d = obj as Deck;
+			if (d == null)
+			{
+				return false;
+			}
+
+			Cards.Sort();
+			d.Cards.Sort();
+
+			return Klass == d.Klass && Format == d.Format
+				&& Cards.SequenceEqual(d.Cards);
+		}
+
+		public override int GetHashCode()
+		{
+			return (int)Klass ^ (int)Format ^ Cards.Count;
 		}
 
 		private PlayerClass ConvertKlass(string klass)
