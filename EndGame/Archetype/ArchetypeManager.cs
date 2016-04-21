@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using HDT.Plugins.EndGame.Enums;
 using Hearthstone_Deck_Tracker.Enums;
 using Hearthstone_Deck_Tracker.Stats;
 
@@ -9,42 +7,59 @@ namespace HDT.Plugins.EndGame.Archetype
 {
 	public class ArchetypeManager
 	{
-		private List<Deck> _archetypes;
+		private List<ArchetypeDeck> _archetypes;
+		private List<ArchetypeStyle> _styles;
+
+		// TODO make prop defs consistent
+		public List<ArchetypeDeck> Decks
+		{
+			get { return _archetypes; }
+		}
 
 		public ArchetypeManager()
 		{
-			_archetypes = new List<Deck>();
-			// load archetypes from ...
+			_archetypes = new List<ArchetypeDeck>();
+			_styles = new List<ArchetypeStyle>() {
+				ArchetypeStyles.AGGRO,
+				ArchetypeStyles.COMBO,
+				ArchetypeStyles.CONTROL,
+				ArchetypeStyles.MIDRANGE
+			};
 		}
 
-		public void Add(Deck deck)
+		public void Add(ArchetypeDeck deck)
 		{
-		}
-
-		public void Remove(Deck deck)
-		{
-		}
-
-		public List<Deck> Filter(PlayerClass klass, Format? format)
-		{
-			var fmt = format ?? Format.All;
-			if (fmt == Format.All)
+			if (!_archetypes.Contains(deck))
 			{
-				return _archetypes.Where(x => x.Klass == klass).ToList();
-			}
-			else
-			{
-				return _archetypes.Where(x => x.Klass == klass && x.Format == fmt).ToList();
+				_archetypes.Add(deck);
 			}
 		}
 
-		public List<Deck> Find(GameStats game)
+		public bool Remove(ArchetypeDeck deck)
 		{
-			List<TrackedCard> deck = game.OpponentCards;
-			var klass = (PlayerClass)Enum.Parse(typeof(PlayerClass), game.OpponentHero);
-			var achetypes = Filter(klass, game.Format);
+			return _archetypes.Remove(deck);
+		}
 
-			return new List<Deck>();
+		public List<ArchetypeDeck> Find(GameStats game)
+		{
+			var deck = new PlayedDeck(game.OpponentHero, game.Format ?? Format.All, game.Turns, game.OpponentCards);
+			return Find(deck);
+
+			//foreach (var archetype in _archetypes)
+			//{
+			//	// store and sort? get largest?
+			//	var s = deck.Similarity(archetype);
+			//	if (s > similarity)
+			//	{
+			//		similarity = s;
+			//		match = archetype;
+			//	}
+			//}
+		}
+
+		public List<ArchetypeDeck> Find(PlayedDeck deck)
+		{
+			return _archetypes.OrderByDescending(x => deck.Similarity(x)).ToList();
 		}
 	}
 }
