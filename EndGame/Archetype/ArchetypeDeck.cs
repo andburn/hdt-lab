@@ -19,5 +19,10 @@ namespace HDT.Plugins.EndGame.Archetype
 			Name = name;
 			Style = style;
 		}
+
+		public override string ToString()
+		{
+			return $"{Name} : {Klass.ToString()}.{Style.Style}";
+		}
 	}
 }

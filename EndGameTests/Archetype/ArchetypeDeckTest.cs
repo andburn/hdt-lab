@@ -36,5 +36,18 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			Assert.AreEqual(Format.Standard, deck.Format);
 			Assert.IsTrue(deck.Cards.Count == 0);
 		}
+
+		[TestMethod]
+		public void TestToString()
+		{
+			var deck = new ArchetypeDeck(
+				"Control Warrior",
+				PlayerClass.WARRIOR,
+				Format.Standard,
+				ArchetypeStyles.CONTROL,
+				new List<Card>()
+			);
+			Assert.AreEqual("Control Warrior : WARRIOR.CONTROL", deck.ToString());
+		}
 	}
 }
