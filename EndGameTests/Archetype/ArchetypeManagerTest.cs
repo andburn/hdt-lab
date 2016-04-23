@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Enums;
@@ -12,6 +13,17 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 	public class ArchetypeManagerTest
 	{
 		private ArchetypeManager _manager;
+
+		private string _json = "[{\"Name\":\"One\",\"Style\":{\"Name\":\"Control\",\"Style\":0},\"Klass\":4,\"Format\":1,\"Cards\":[{\"Id\":\"AB_123\",\"Count\":1},{\"Id\":\"AB_124\",\"Count\":1},{\"Id\":\"AB_125\",\"Count\":1}]}]";
+
+		private List<ArchetypeDeck> _decks = new List<ArchetypeDeck>() {
+			new ArchetypeDeck("One", PlayerClass.HUNTER, Format.Standard, ArchetypeStyles.CONTROL,
+				new List<Card>() {
+					new SingleCard("AB_123"),
+					new SingleCard("AB_124"),
+					new SingleCard("AB_125")
+				})
+		};
 
 		[TestInitialize]
 		public void Setup()
@@ -91,7 +103,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		}
 
 		[TestMethod]
-		public void Grow()
+		public void FindBestMatch()
 		{
 			_manager.Add(new ArchetypeDeck(
 				"Face ",
@@ -120,6 +132,26 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 				new TrackedCard("FP1_298", 1)
 			});
 			Assert.AreEqual("rAmp", _manager.Find(deck).First().Name);
+		}
+
+		// TODO: Improve these tests, a lot!
+
+		[TestMethod]
+		public void LoadArcheyptesFromFile()
+		{
+			_manager.LoadDecks("data/decks.json");
+			Assert.AreEqual(1, _manager.Decks.Count);
+			Assert.AreEqual(_decks[0].Name, _manager.Decks[0].Name);
+			Assert.AreEqual(_decks[0].Klass, _manager.Decks[0].Klass);
+		}
+
+		[TestMethod]
+		public void SaveArcheyptesFromFile()
+		{
+			_manager.Add(_decks.First());
+			_manager.SaveDecks("data/saved.json");
+			var read = File.ReadAllText("data/saved.json");
+			Assert.AreEqual(_json, read);
 		}
 	}
 }

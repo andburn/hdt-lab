@@ -1,0 +1,25 @@
+﻿[
+  {
+    "name": "One",
+    "style": {
+      "name": "Control",
+      "style": "Control"
+    },
+    "klass": "Hunter",
+    "format": "Standard",
+    "cards": [
+      {
+        "id": "AB_123",
+        "count": 1
+      },
+      {
+        "id": "AB_124",
+        "count": 1
+      },
+      {
+        "id": "AB_125",
+        "count": 1
+      }
+    ]
+  }
+]

@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Hearthstone_Deck_Tracker.Enums;
 using Hearthstone_Deck_Tracker.Stats;
+using Newtonsoft.Json;
 
 namespace HDT.Plugins.EndGame.Archetype
 {
 	public class ArchetypeManager
 	{
+		private const string DECKS_FILE = @"E:\Dump\deck.json";
+
 		private List<ArchetypeDeck> _archetypes;
 		private List<ArchetypeStyle> _styles;
 
@@ -25,6 +29,19 @@ namespace HDT.Plugins.EndGame.Archetype
 				ArchetypeStyles.CONTROL,
 				ArchetypeStyles.MIDRANGE
 			};
+		}
+
+		public void LoadDecks(string file = null)
+		{
+			var decks = JsonConvert.DeserializeObject<List<ArchetypeDeck>>(
+				File.ReadAllText(file ?? DECKS_FILE));
+			foreach (var d in decks)
+				Add(d);
+		}
+
+		public void SaveDecks(string file = null)
+		{
+			File.WriteAllText(file ?? DECKS_FILE, JsonConvert.SerializeObject(_archetypes));
 		}
 
 		public void Add(ArchetypeDeck deck)
