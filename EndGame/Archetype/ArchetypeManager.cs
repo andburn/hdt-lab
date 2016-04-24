@@ -22,7 +22,14 @@ namespace HDT.Plugins.EndGame.Archetype
 
 		public ArchetypeManager()
 		{
-			_archetypes = new List<ArchetypeDeck>();
+			_archetypes = new List<ArchetypeDeck>() {
+				new ArchetypeDeck("Sample A", Enums.PlayerClass.PALADIN, Format.All, ArchetypeStyles.MIDRANGE, new List<Card>() {
+					new SingleCard("EX1_008"), new SingleCard("EX1_360"), new SingleCard("EX1_382")
+				}),
+				new ArchetypeDeck("Sample B", Enums.PlayerClass.HUNTER, Format.All, ArchetypeStyles.AGGRO, new List<Card>() {
+					new SingleCard("CS2_124"), new SingleCard("EX1_538"), new SingleCard("EX1_539")
+				})
+			};
 			_styles = new List<ArchetypeStyle>() {
 				ArchetypeStyles.AGGRO,
 				ArchetypeStyles.COMBO,
@@ -65,6 +72,7 @@ namespace HDT.Plugins.EndGame.Archetype
 
 		public List<ArchetypeDeck> Find(PlayedDeck deck)
 		{
+			// TODO remove any 0 or even below a threshold?
 			return _archetypes.OrderByDescending(x => deck.Similarity(x)).ToList();
 		}
 	}

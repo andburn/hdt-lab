@@ -70,7 +70,7 @@ namespace HDT.Plugins.EndGame
 			ClearDefaultNoteSettings();
 			_endGameMenuItem = new Controls.PluginMenu();
 			SetSettingsFlyout();
-			GameEvents.OnGameEnd.Add(EndGame.ScreenShot);
+			GameEvents.OnGameEnd.Add(EndGame.Archetypes);
 		}
 
 		public void OnUnload()

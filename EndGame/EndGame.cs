@@ -1,6 +1,9 @@
 ﻿using System;
+using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Properties;
 using HDT.Plugins.EndGame.Screenshot;
+using HDT.Plugins.EndGame.Windows;
+using Hearthstone_Deck_Tracker.API;
 
 namespace HDT.Plugins.EndGame
 {
@@ -36,6 +39,17 @@ namespace HDT.Plugins.EndGame
 			{
 				await Capture.Simple(delay);
 			}
+		}
+
+		public static void Archetypes()
+		{
+			var deck = Core.Game.CurrentGameStats.OpponentCards;
+			var window = new MainWindow();
+			window.SetOpponentDeck(deck);
+			var manager = new ArchetypeManager();
+			var bestMatch = manager.Find(Core.Game.CurrentGameStats);
+			window.SetArchetypeDeck(bestMatch);
+			window.Show();
 		}
 	}
 }
