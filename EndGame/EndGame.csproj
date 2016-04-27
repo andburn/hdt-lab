@@ -75,6 +75,12 @@
     <Compile Include="Archetype\Deck.cs" />
     <Compile Include="Archetype\PlayedDeck.cs" />
     <Compile Include="Archetype\SingleCard.cs" />
+    <Compile Include="Controls\ArchetypeSettings.xaml.cs">
+      <DependentUpon>ArchetypeSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ScreenshotSettings.xaml.cs">
+      <DependentUpon>ScreenshotSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Enums\PlayerClass.cs" />
     <Compile Include="Controls\NoteDialog.xaml.cs">
       <DependentUpon>NoteDialog.xaml</DependentUpon>
@@ -112,6 +118,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ArchetypeSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NoteDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -121,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PluginSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ScreenshotSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

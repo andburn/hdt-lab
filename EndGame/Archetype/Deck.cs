@@ -11,6 +11,14 @@ namespace HDT.Plugins.EndGame.Archetype
 		public Format Format { get; set; }
 		public List<Card> Cards { get; set; }
 
+		public List<Hearthstone_Deck_Tracker.Hearthstone.Card> RealCards
+		{
+			get
+			{
+				return Cards.Select(x => new Hearthstone_Deck_Tracker.Hearthstone.Card(HearthDb.Cards.Collectible[x.Id])).ToList();
+			}
+		}
+
 		public Deck()
 		{
 		}

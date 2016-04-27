@@ -1,5 +1,4 @@
 ﻿using System;
-using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Properties;
 using HDT.Plugins.EndGame.Screenshot;
 using HDT.Plugins.EndGame.Windows;
@@ -43,12 +42,7 @@ namespace HDT.Plugins.EndGame
 
 		public static void Archetypes()
 		{
-			var deck = Core.Game.CurrentGameStats.OpponentCards;
-			var window = new MainWindow();
-			window.SetOpponentDeck(deck);
-			var manager = new ArchetypeManager();
-			var bestMatch = manager.Find(Core.Game.CurrentGameStats);
-			window.SetArchetypeDeck(bestMatch);
+			var window = new MainWindow(Core.Game.CurrentGameStats);
 			window.Show();
 		}
 	}

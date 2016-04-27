@@ -42,6 +42,7 @@ namespace HDT.Plugins.EndGame.Archetype
 		{
 			var decks = JsonConvert.DeserializeObject<List<ArchetypeDeck>>(
 				File.ReadAllText(file ?? DECKS_FILE));
+			Decks.Clear();
 			foreach (var d in decks)
 				Add(d);
 		}

@@ -104,7 +104,7 @@ namespace HDT.Plugins.EndGame
 			Panel.SetZIndex(settings, 100);
 			settings.Header = "End Game Settings";
 			settings.Content = new Controls.PluginSettings();
-			//newflyout.Width = 250;
+			settings.Width = 400;
 			//settings.Theme = FlyoutTheme.Accent;
 			flyouts.Add(settings);
 

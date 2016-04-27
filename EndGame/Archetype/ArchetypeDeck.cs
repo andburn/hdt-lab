@@ -22,6 +22,11 @@ namespace HDT.Plugins.EndGame.Archetype
 
 		public override string ToString()
 		{
+			return Name;
+		}
+
+		public string ToNoteString()
+		{
 			return $"{Name} : {Klass.ToString()}.{Style.Style}";
 		}
 	}

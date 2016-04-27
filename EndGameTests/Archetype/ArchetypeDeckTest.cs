@@ -47,7 +47,20 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 				ArchetypeStyles.CONTROL,
 				new List<Card>()
 			);
-			Assert.AreEqual("Control Warrior : WARRIOR.CONTROL", deck.ToString());
+			Assert.AreEqual("Control Warrior", deck.ToString());
+		}
+
+		[TestMethod]
+		public void TestToNoteString()
+		{
+			var deck = new ArchetypeDeck(
+				"Control Warrior",
+				PlayerClass.WARRIOR,
+				Format.Standard,
+				ArchetypeStyles.CONTROL,
+				new List<Card>()
+			);
+			Assert.AreEqual("Control Warrior : WARRIOR.CONTROL", deck.ToNoteString());
 		}
 	}
 }
