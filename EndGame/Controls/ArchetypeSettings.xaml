@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:HDT.Plugins.EndGame.Controls"
              xmlns:hdt="clr-namespace:Hearthstone_Deck_Tracker.Controls;assembly=HearthstoneDeckTracker"
+             xmlns:mahapps="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid ShowGridLines="True">
@@ -16,9 +17,11 @@
             <ComboBox x:Name="DeckClassFilterSelection" SelectionChanged="DeckClassFilterSelection_SelectionChanged"></ComboBox>
             <ComboBox x:Name="DeckFormatFilterSelection" SelectionChanged="DeckFormatFilterSelection_SelectionChanged"></ComboBox>
             <ListBox x:Name="DeckList" SelectionChanged="DeckList_SelectionChanged"></ListBox>
+            <Button>New</Button>
+            <Button Click="Button_Click">Delete</Button>
         </StackPanel>
         <StackPanel x:Name="DeckPanel" Grid.Column="1" Width="220">
-            <TextBlock x:Name="DeckNameBox" Text="{Binding Name}"></TextBlock>
+            <TextBox x:Name="DeckNameBox" Text="{Binding Name}" />
             <ComboBox x:Name="DeckClassSelection" SelectedItem="{Binding Klass}" SelectionChanged="DeckClassSelection_SelectionChanged"></ComboBox>
             <ComboBox x:Name="DeckFormatSelection" SelectedItem="{Binding Format}"  SelectionChanged="DeckFormatSelection_SelectionChanged"></ComboBox>
             <ListView x:Name="ArchetypeDeckView" ItemsSource="{Binding RealCards}">
@@ -28,6 +31,13 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <DockPanel LastChildFill="False">
+                <TextBox x:Name="CardNameBox" mahapps:TextBoxHelper.Watermark="Add Card"
+                         TextChanged="CardNameBox_TextChanged"
+                         PreviewKeyDown="CardNameBox_OnPreviewKeyDown"></TextBox>
+                <Button DockPanel.Dock="Right" Width="40" x:Name="Addbutton" Click="Addbutton_Click">Add</Button>
+            </DockPanel>
+            <ListBox x:Name="SearchList" Height="100"></ListBox>
         </StackPanel>
     </Grid>
 </UserControl>

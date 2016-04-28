@@ -2,9 +2,9 @@
 
 namespace HDT.Plugins.EndGame.Archetype
 {
-	/*
-	 * Ignores card count when determining equality
-	 */
+	/// <summary>
+	/// Ignores card count when determining equality
+	/// </summary>
 
 	public class SingleCard : Card
 	{
