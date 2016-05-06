@@ -2,7 +2,6 @@
 using HDT.Plugins.EndGame.Properties;
 using HDT.Plugins.EndGame.Screenshot;
 using HDT.Plugins.EndGame.Windows;
-using Hearthstone_Deck_Tracker.API;
 
 namespace HDT.Plugins.EndGame
 {
@@ -42,7 +41,7 @@ namespace HDT.Plugins.EndGame
 
 		public static void Archetypes()
 		{
-			var window = new MainWindow(Core.Game.CurrentGameStats);
+			var window = new MainWindow(); // Core.Game.CurrentGameStats);
 			window.Show();
 		}
 	}

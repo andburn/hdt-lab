@@ -14,30 +14,12 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <ComboBox x:Name="DeckClassFilterSelection" SelectionChanged="DeckClassFilterSelection_SelectionChanged"></ComboBox>
-            <ComboBox x:Name="DeckFormatFilterSelection" SelectionChanged="DeckFormatFilterSelection_SelectionChanged"></ComboBox>
+            <ComboBox x:Name="DeckClassFilterSelection"></ComboBox>
+            <ComboBox x:Name="DeckFormatFilterSelection"></ComboBox>
             <ListBox x:Name="DeckList" SelectionChanged="DeckList_SelectionChanged"></ListBox>
             <Button>New</Button>
-            <Button Click="Button_Click">Delete</Button>
+            <Button>Delete</Button>
         </StackPanel>
-        <StackPanel x:Name="DeckPanel" Grid.Column="1" Width="220">
-            <TextBox x:Name="DeckNameBox" Text="{Binding Name}" />
-            <ComboBox x:Name="DeckClassSelection" SelectedItem="{Binding Klass}" SelectionChanged="DeckClassSelection_SelectionChanged"></ComboBox>
-            <ComboBox x:Name="DeckFormatSelection" SelectedItem="{Binding Format}"  SelectionChanged="DeckFormatSelection_SelectionChanged"></ComboBox>
-            <ListView x:Name="ArchetypeDeckView" ItemsSource="{Binding RealCards}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <hdt:Card />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <DockPanel LastChildFill="False">
-                <TextBox x:Name="CardNameBox" mahapps:TextBoxHelper.Watermark="Add Card"
-                         TextChanged="CardNameBox_TextChanged"
-                         PreviewKeyDown="CardNameBox_OnPreviewKeyDown"></TextBox>
-                <Button DockPanel.Dock="Right" Width="40" x:Name="Addbutton" Click="Addbutton_Click">Add</Button>
-            </DockPanel>
-            <ListBox x:Name="SearchList" Height="100"></ListBox>
-        </StackPanel>
+        <local:ArchetypeDeckView x:Name="ArchetypeDeck"  Grid.Column="1" />
     </Grid>
 </UserControl>

@@ -75,6 +75,10 @@
     <Compile Include="Archetype\Deck.cs" />
     <Compile Include="Archetype\PlayedDeck.cs" />
     <Compile Include="Archetype\SingleCard.cs" />
+    <Compile Include="Controls\ArchetypeDeckView.xaml.cs">
+      <DependentUpon>ArchetypeDeckView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ArchetypeDeckViewModel.cs" />
     <Compile Include="Controls\ArchetypeSettings.xaml.cs">
       <DependentUpon>ArchetypeSettings.xaml</DependentUpon>
     </Compile>
@@ -118,6 +122,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ArchetypeDeckView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ArchetypeSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using HDT.Plugins.EndGame.Archetype;
-using Hearthstone_Deck_Tracker;
-using Hearthstone_Deck_Tracker.Hearthstone;
-using Hearthstone_Deck_Tracker.Stats;
-using Hearthstone_Deck_Tracker.Utility.Extensions;
+using HDT.Plugins.EndGame.Controls;
 
 namespace HDT.Plugins.EndGame.Windows
 {
@@ -14,50 +10,52 @@ namespace HDT.Plugins.EndGame.Windows
 	public partial class MainWindow
 	{
 		private ArchetypeManager _manager;
-		private PlayedDeck _opponentDeck;
+		//private PlayedDeck _opponentDeck;
 
-		public MainWindow(GameStats game)
+		public MainWindow()
 		{
 			InitializeComponent();
 
 			_manager = new ArchetypeManager();
 			_manager.LoadDecks();
 
-			// TODO watch for changes from "Toast"
-			_opponentDeck = new PlayedDeck(game.OpponentHero, game.Format ?? Hearthstone_Deck_Tracker.Enums.Format.All, game.Turns, game.OpponentCards);
-			// TODO also add format here, deal with "All"
-			ArchetypeSelection.ItemsSource = _manager.Decks.Select(d => d.Klass == _opponentDeck.Klass);
-			ArchetypeSelection.SelectedIndex = 0;
-			// TODO some indication of no match
-			var bestMatch = _manager.Find(_opponentDeck).FirstOrDefault();
-			if (ArchetypeSelection.Items.Contains(bestMatch))
-				ArchetypeSelection.SelectedItem = bestMatch;
+			DeckView.DataContext = new ArchetypeDeckViewModel(_manager.Decks.First());
+
+			//// TODO watch for changes from "Toast"
+			//_opponentDeck = new PlayedDeck(game.OpponentHero, game.Format ?? Hearthstone_Deck_Tracker.Enums.Format.All, game.Turns, game.OpponentCards);
+			//// TODO also add format here, deal with "All"
+			//ArchetypeSelection.ItemsSource = _manager.Decks.Select(d => d.Klass == _opponentDeck.Klass);
+			//ArchetypeSelection.SelectedIndex = 0;
+			//// TODO some indication of no match
+			//var bestMatch = _manager.Find(_opponentDeck).FirstOrDefault();
+			//if (ArchetypeSelection.Items.Contains(bestMatch))
+			//	ArchetypeSelection.SelectedItem = bestMatch;
 		}
 
-		internal void SetOpponentDeck(List<TrackedCard> cards)
-		{
-			var deck = new Hearthstone_Deck_Tracker.Hearthstone.Deck();
-			foreach (var c in cards)
-			{
-				var existing = deck.Cards.FirstOrDefault(x => x.Id == c.Id);
-				if (existing != null)
-				{
-					existing.Count++;
-					continue;
-				}
-				var card = Database.GetCardFromId(c.Id);
-				card.Count = c.Count;
-				deck.Cards.Add(card);
-				if (string.IsNullOrEmpty(deck.Class) && !string.IsNullOrEmpty(card.PlayerClass))
-					deck.Class = card.PlayerClass;
-			}
-			//SetDeck(deck, showImportButton);
-			//_deck = deck;
-			PlayedDeck.Items.Clear();
-			foreach (var card in deck.Cards.ToSortedCardList())
-				PlayedDeck.Items.Add(card);
-			Helper.SortCardCollection(PlayedDeck.Items, false);
-		}
+		//internal void SetOpponentDeck(List<TrackedCard> cards)
+		//{
+		//	var deck = new Hearthstone_Deck_Tracker.Hearthstone.Deck();
+		//	foreach (var c in cards)
+		//	{
+		//		var existing = deck.Cards.FirstOrDefault(x => x.Id == c.Id);
+		//		if (existing != null)
+		//		{
+		//			existing.Count++;
+		//			continue;
+		//		}
+		//		var card = Database.GetCardFromId(c.Id);
+		//		card.Count = c.Count;
+		//		deck.Cards.Add(card);
+		//		if (string.IsNullOrEmpty(deck.Class) && !string.IsNullOrEmpty(card.PlayerClass))
+		//			deck.Class = card.PlayerClass;
+		//	}
+		//	//SetDeck(deck, showImportButton);
+		//	//_deck = deck;
+		//	PlayedDeck.Items.Clear();
+		//	foreach (var card in deck.Cards.ToSortedCardList())
+		//		PlayedDeck.Items.Add(card);
+		//	Helper.SortCardCollection(PlayedDeck.Items, false);
+		//}
 
 		//internal void SetArchetypeDeck(List<ArchetypeDeck> decks)
 		//{
