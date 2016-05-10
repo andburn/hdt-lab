@@ -26,7 +26,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			var deck = new ArchetypeDeck(
 				"Control Warrior",
 				PlayerClass.WARRIOR,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.CONTROL,
 				new List<Card>()
 			);
@@ -43,7 +43,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			var deck = new ArchetypeDeck(
 				"Control Warrior",
 				PlayerClass.WARRIOR,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.CONTROL,
 				new List<Card>()
 			);
@@ -56,7 +56,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			var deck = new ArchetypeDeck(
 				"Control Warrior",
 				PlayerClass.WARRIOR,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.CONTROL,
 				new List<Card>()
 			);

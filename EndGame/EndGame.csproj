@@ -85,6 +85,7 @@
     <Compile Include="Controls\ScreenshotSettings.xaml.cs">
       <DependentUpon>ScreenshotSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\GameFormat.cs" />
     <Compile Include="Enums\PlayerClass.cs" />
     <Compile Include="Controls\NoteDialog.xaml.cs">
       <DependentUpon>NoteDialog.xaml</DependentUpon>
@@ -109,6 +110,7 @@
     <Compile Include="Screenshot\Image.cs" />
     <Compile Include="Screenshot\Capture.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

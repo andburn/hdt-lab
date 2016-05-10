@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Hearthstone_Deck_Tracker.Enums;
+using HDT.Plugins.EndGame.Enums;
 using Hearthstone_Deck_Tracker.Stats;
 using Newtonsoft.Json;
 
@@ -23,10 +23,10 @@ namespace HDT.Plugins.EndGame.Archetype
 		public ArchetypeManager()
 		{
 			_archetypes = new List<ArchetypeDeck>() {
-				new ArchetypeDeck("Sample A", Enums.PlayerClass.PALADIN, Format.All, ArchetypeStyles.MIDRANGE, new List<Card>() {
+				new ArchetypeDeck("Sample A", Enums.PlayerClass.PALADIN, GameFormat.ANY, ArchetypeStyles.MIDRANGE, new List<Card>() {
 					new SingleCard("EX1_008"), new SingleCard("EX1_360"), new SingleCard("EX1_382")
 				}),
-				new ArchetypeDeck("Sample B", Enums.PlayerClass.HUNTER, Format.All, ArchetypeStyles.AGGRO, new List<Card>() {
+				new ArchetypeDeck("Sample B", Enums.PlayerClass.HUNTER, GameFormat.ANY, ArchetypeStyles.AGGRO, new List<Card>() {
 					new SingleCard("CS2_124"), new SingleCard("EX1_538"), new SingleCard("EX1_539")
 				})
 			};
@@ -65,9 +65,14 @@ namespace HDT.Plugins.EndGame.Archetype
 			return _archetypes.Remove(deck);
 		}
 
+		public ArchetypeDeck Get(string name)
+		{
+			return _archetypes.FirstOrDefault(x => x.Name == name);
+		}
+
 		public List<ArchetypeDeck> Find(GameStats game)
 		{
-			var deck = new PlayedDeck(game.OpponentHero, game.Format ?? Format.All, game.Turns, game.OpponentCards);
+			var deck = new PlayedDeck(game.OpponentHero, game.Format, game.Turns, game.OpponentCards);
 			return Find(deck);
 		}
 

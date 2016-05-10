@@ -19,7 +19,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_archDeck = new ArchetypeDeck(
 				"Control Warrior",
 				PlayerClass.WARRIOR,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.CONTROL,
 				new List<Card>()
 			);
@@ -41,7 +41,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			var deck = new PlayedDeck();
 			Assert.AreEqual(0, deck.Turns);
 			Assert.AreEqual(PlayerClass.WARRIOR, deck.Klass);
-			Assert.AreEqual(Format.All, deck.Format);
+			Assert.AreEqual(GameFormat.ANY, deck.Format);
 			Assert.IsNull(deck.Cards);
 		}
 
@@ -49,7 +49,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		public void ParamConstructorAssignsProps()
 		{
 			Assert.AreEqual(PlayerClass.WARRIOR, _playDeck.Klass);
-			Assert.AreEqual(Format.Standard, _playDeck.Format);
+			Assert.AreEqual(GameFormat.ANY, _playDeck.Format);
 			Assert.AreEqual(7, _playDeck.Turns);
 			Assert.AreEqual(6, _playDeck.Cards.Count);
 		}
@@ -104,7 +104,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		public void SimilarityDifferentFormatsShouldBeZero()
 		{
 			_archDeck.Cards.Add(new SingleCard("AB_125"));
-			_archDeck.Format = Format.Wild;
+			_archDeck.Format = GameFormat.WILD;
 			Assert.AreEqual(0.0, _playDeck.Similarity(_archDeck));
 		}
 
@@ -112,7 +112,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		public void SimilarityArchFormatAll()
 		{
 			_archDeck.Cards.Add(new SingleCard("AB_125"));
-			_archDeck.Format = Format.All;
+			_archDeck.Format = GameFormat.ANY;
 			Assert.AreEqual(1.0, _playDeck.Similarity(_archDeck));
 		}
 	}

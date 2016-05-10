@@ -15,7 +15,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			{
 			}
 
-			public ConcreteDeck(PlayerClass klass, Format format, List<Card> cards)
+			public ConcreteDeck(PlayerClass klass, GameFormat format, List<Card> cards)
 				: base(klass, format, cards)
 			{
 			}
@@ -38,7 +38,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 				new Card("AB_123", 1),
 				new Card("AB_456", 2)
 			};
-			var deck = new ConcreteDeck(PlayerClass.DRUID, Format.Standard, cards);
+			var deck = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, cards);
 
 			Assert.AreEqual(PlayerClass.DRUID, deck.Klass);
 			Assert.AreEqual(Format.Standard, deck.Format);
@@ -52,20 +52,20 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 				new Card("AB_123", 1),
 				new Card("AB_456", 2)
 			};
-			var deck = new ConcreteDeck(PlayerClass.DRUID, Format.Standard, cards);
-			Assert.AreEqual(deck, new ConcreteDeck(PlayerClass.DRUID, Format.Standard, cards));
+			var deck = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, cards);
+			Assert.AreEqual(deck, new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, cards));
 		}
 
 		[TestMethod]
 		public void EqualByValue()
 		{
-			var deckA = new ConcreteDeck(PlayerClass.DRUID, Format.Standard,
+			var deckA = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD,
 				new List<Card>() {
 					new Card("AB_123", 1),
 					new Card("AB_456", 2)
 				}
 			);
-			var deckB = new ConcreteDeck(PlayerClass.DRUID, Format.Standard,
+			var deckB = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD,
 				new List<Card>() {
 					new Card("AB_123", 1),
 					new Card("AB_456", 2)

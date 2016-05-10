@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
 
 namespace HDT.Plugins.EndGame.Archetype
 {
@@ -13,7 +12,7 @@ namespace HDT.Plugins.EndGame.Archetype
 		{
 		}
 
-		public ArchetypeDeck(string name, PlayerClass klass, Format format, ArchetypeStyle style, List<Card> cards)
+		public ArchetypeDeck(string name, PlayerClass klass, GameFormat format, ArchetypeStyle style, List<Card> cards)
 			: base(klass, format, cards)
 		{
 			Name = name;

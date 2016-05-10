@@ -17,7 +17,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		private string _json = "[{\"Name\":\"One\",\"Style\":{\"Name\":\"Control\",\"Style\":0},\"Klass\":4,\"Format\":1,\"Cards\":[{\"Id\":\"AB_123\",\"Count\":1},{\"Id\":\"AB_124\",\"Count\":1},{\"Id\":\"AB_125\",\"Count\":1}]}]";
 
 		private List<ArchetypeDeck> _decks = new List<ArchetypeDeck>() {
-			new ArchetypeDeck("One", PlayerClass.HUNTER, Format.Standard, ArchetypeStyles.CONTROL,
+			new ArchetypeDeck("One", PlayerClass.HUNTER, GameFormat.STANDARD, ArchetypeStyles.CONTROL,
 				new List<Card>() {
 					new SingleCard("AB_123"),
 					new SingleCard("AB_124"),
@@ -45,7 +45,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Add(new ArchetypeDeck(
 				"Face ",
 				PlayerClass.HUNTER,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.AGGRO,
 				new List<Card>() {
 					new SingleCard("AB_123"),
@@ -55,7 +55,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Add(new ArchetypeDeck(
 				"Face ",
 				PlayerClass.HUNTER,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.AGGRO,
 				new List<Card>() {
 					new SingleCard("AB_123"),
@@ -71,7 +71,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Add(new ArchetypeDeck(
 				"Face ",
 				PlayerClass.HUNTER,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.AGGRO,
 				new List<Card>() {
 					new SingleCard("AB_123"),
@@ -81,7 +81,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Add(new ArchetypeDeck(
 				"rAmp",
 				PlayerClass.DRUID,
-				Format.Wild,
+				GameFormat.WILD,
 				ArchetypeStyles.COMBO,
 				new List<Card>() {
 					new SingleCard("AB_987"),
@@ -92,7 +92,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Remove(new ArchetypeDeck(
 				"rAmp",
 				PlayerClass.DRUID,
-				Format.Wild,
+				GameFormat.WILD,
 				ArchetypeStyles.COMBO,
 				new List<Card>() {
 					new SingleCard("AB_987"),
@@ -108,7 +108,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Add(new ArchetypeDeck(
 				"Face ",
 				PlayerClass.HUNTER,
-				Format.Standard,
+				GameFormat.STANDARD,
 				ArchetypeStyles.AGGRO,
 				new List<Card>() {
 					new SingleCard("AB_123"),
@@ -118,7 +118,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			_manager.Add(new ArchetypeDeck(
 				"rAmp",
 				PlayerClass.DRUID,
-				Format.Wild,
+				GameFormat.WILD,
 				ArchetypeStyles.COMBO,
 				new List<Card>() {
 					new SingleCard("AB_987"),

@@ -1,38 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
 
 namespace HDT.Plugins.EndGame.Archetype
 {
 	public abstract class Deck
 	{
 		public PlayerClass Klass { get; set; }
-		public Format Format { get; set; }
+		public GameFormat Format { get; set; }
 		public List<Card> Cards { get; set; }
-
-		public List<Hearthstone_Deck_Tracker.Hearthstone.Card> RealCards
-		{
-			get
-			{
-				return Cards.Select(x => new Hearthstone_Deck_Tracker.Hearthstone.Card(HearthDb.Cards.Collectible[x.Id])).ToList();
-			}
-		}
 
 		public Deck()
 		{
 		}
 
-		public Deck(PlayerClass klass, Format format, List<Card> cards)
+		public Deck(PlayerClass klass, GameFormat format, List<Card> cards)
+			: this()
 		{
 			Klass = klass;
 			Format = format;
 			Cards = cards;
 		}
 
-		public Deck(string klass, Format format, List<Card> cards)
+		public Deck(string klass, GameFormat format, List<Card> cards)
+			: this()
 		{
-			Klass = ConvertKlass(klass);
+			Klass = Utils.KlassFromString(klass);
 			Format = format;
 			Cards = cards;
 		}
@@ -59,41 +52,9 @@ namespace HDT.Plugins.EndGame.Archetype
 
 		public override int GetHashCode()
 		{
-			return (int)Klass ^ (int)Format ^ Cards.Count;
-		}
-
-		private PlayerClass ConvertKlass(string klass)
-		{
-			switch (klass.ToLowerInvariant())
-			{
-				case "druid":
-					return PlayerClass.DRUID;
-
-				case "hunter":
-					return PlayerClass.HUNTER;
-
-				case "mage":
-					return PlayerClass.MAGE;
-
-				case "paladin":
-					return PlayerClass.PALADIN;
-
-				case "priest":
-					return PlayerClass.PRIEST;
-
-				case "rogue":
-					return PlayerClass.ROGUE;
-
-				case "shaman":
-					return PlayerClass.SHAMAN;
-
-				case "warlock":
-					return PlayerClass.WARLOCK;
-
-				case "warrior":
-				default:
-					return PlayerClass.WARRIOR;
-			}
+			// TODO hash code can't include cards, any change add/remove gives different hash!
+			// now will create large buckets, add uuid maybe
+			return (int)Klass ^ (int)Format;
 		}
 	}
 }
