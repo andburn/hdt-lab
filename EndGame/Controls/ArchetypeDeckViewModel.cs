@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
-using Hearthstone_Deck_Tracker.Utility.Logging;
+using HearthDb.Enums;
+using Hearthstone_Deck_Tracker;
 using HDTCard = Hearthstone_Deck_Tracker.Hearthstone.Card;
 
 namespace HDT.Plugins.EndGame.Controls
@@ -11,18 +13,36 @@ namespace HDT.Plugins.EndGame.Controls
 	public class ArchetypeDeckViewModel
 	{
 		private ArchetypeDeck _deck;
+		private CultureInfo _culture;
 		private ObservableCollection<HDTCard> _cards;
+		private List<HDTCard> _viableCards;
 
 		public ArchetypeDeckViewModel(ArchetypeDeck deck)
 		{
 			_deck = deck;
+
 			_cards = new ObservableCollection<HDTCard>(_deck.Cards.Select(x => new HDTCard(HearthDb.Cards.Collectible[x.Id])));
-			_cards.CollectionChanged += CardsUpdated;
+
+			_culture = new CultureInfo(Config.Instance.SelectedLanguage.Insert(2, "-"));
+
+			_viableCards = new List<HDTCard>();
+			UpdateViableList();
 		}
 
-		private void CardsUpdated(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+		private void UpdateViableList()
 		{
-			Log.Info("Cards Updated: " + Cards.Count);
+			_viableCards = HearthDb.Cards.Collectible.Values
+				.Where(c => (int)c.Class == (int)Klass || c.Class == CardClass.NEUTRAL)
+				.Select(c => new HDTCard(c)).ToList();
+		}
+
+		public List<HDTCard> ViableCardSearch(string text)
+		{
+			// language dependent case-insensitivity
+			// http://stackoverflow.com/questions/444798/case-insensitive-containsstring/15464440#15464440)
+			var predictions = _viableCards.Where(x =>
+				_culture.CompareInfo.IndexOf(x.LocalizedName, text, CompareOptions.IgnoreCase) >= 0).ToList();
+			return predictions;
 		}
 
 		public string Name
@@ -34,10 +54,10 @@ namespace HDT.Plugins.EndGame.Controls
 		public PlayerClass Klass
 		{
 			get { return _deck.Klass; }
-			set { _deck.Klass = value; }
+			set { _deck.Klass = value; UpdateViableList(); }
 		}
 
-		public Format Format
+		public GameFormat Format
 		{
 			get { return _deck.Format; }
 			set { _deck.Format = value; }
@@ -51,15 +71,27 @@ namespace HDT.Plugins.EndGame.Controls
 			}
 		}
 
+		public List<HDTCard> ViableCards
+		{
+			get
+			{
+				return _viableCards;
+			}
+		}
+
 		public void AddCard(HDTCard card)
 		{
 			if (!_cards.Contains(card))
+			{
 				_cards.Add(card);
+				_deck.Cards.Add(new SingleCard(card.Id));
+			}
 		}
 
 		public void RemoveCard(HDTCard card)
 		{
 			_cards.Remove(card);
+			_deck.Cards.Remove(new SingleCard(card.Id));
 		}
 	}
 }

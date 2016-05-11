@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker;
 using Hearthstone_Deck_Tracker.Enums;
 using Hearthstone_Deck_Tracker.Utility.Logging;
 using HDTCard = Hearthstone_Deck_Tracker.Hearthstone.Card;
@@ -18,45 +14,35 @@ namespace HDT.Plugins.EndGame.Controls
 	/// </summary>
 	public partial class ArchetypeDeckView : UserControl
 	{
-		private List<HDTCard> _collectibleCards;
-		private CultureInfo _culture;
+		private ArchetypeDeckViewModel _viewModel;
 
 		public ArchetypeDeckView()
 		{
 			InitializeComponent();
 
+			DataContextChanged += ArchetypeDeckView_DataContextChanged;
+			_viewModel = (ArchetypeDeckViewModel)DataContext;
+
 			ComboBoxKlass.ItemsSource = Enum.GetValues(typeof(PlayerClass));
 			ComboBoxFormat.ItemsSource = Enum.GetValues(typeof(Format));
+		}
 
-			_culture = new CultureInfo(Config.Instance.SelectedLanguage.Insert(2, "-"));
-			_collectibleCards = HearthDb.Cards.Collectible.Values.Select(c => new HDTCard(c)).ToList();
+		private void ArchetypeDeckView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			_viewModel = (ArchetypeDeckViewModel)DataContext;
+			Log.Info("DeckView context change: " + _viewModel.Name);
 		}
 
 		private void TextBoxCardSearch_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			// TODO clear on reopen?? load
 			var textBox = (TextBox)sender;
 			if (textBox == null)
 				return;
-			if (string.IsNullOrEmpty(textBox.Text))
-			{
-				//SearchList.ItemsSource = new[] { "No Matches" };
+			if (string.IsNullOrEmpty(textBox.Text)) // show all cards
 				return;
-			}
-			// language dependent case-insensitivity
-			// http://stackoverflow.com/questions/444798/case-insensitive-containsstring/15464440#15464440)
-			var predictions = _collectibleCards.Where(x =>
-				_culture.CompareInfo.IndexOf(x.LocalizedName, textBox.Text, CompareOptions.IgnoreCase) >= 0).ToList();
-			if (predictions.Count <= 0)
-			{
-				//SearchList.ItemsSource = new[] { "No Matches" };
-				return;
-			}
-			SearchList.ItemsSource = predictions;
+
+			SearchList.ItemsSource = _viewModel.ViableCardSearch(textBox.Text);
 			SearchList.SelectedIndex = 0;
-			//var selectionStart = textBox.Text.Length - 1;
-			//textBox.Text = prediction;
-			//textBox.Select(selectionStart + 1, textBox.Text.Length - selectionStart);
 		}
 
 		private void TextBoxCardSearch_OnPreviewKeyDown(object sender, KeyEventArgs e)
@@ -74,45 +60,42 @@ namespace HDT.Plugins.EndGame.Controls
 						SearchList.SelectedIndex -= 1;
 					break;
 
-					//case Key.Enter:
-					//	var deck = (ArchetypeDeck)DeckList.SelectedItem;
-					//	Log.Debug(deck.ToString());
-					//	if (deck != null)
-					//	{
-					//		Log.Debug(SearchList.SelectedItem.ToString());
-					//		if (SearchList.SelectedIndex >= 0)
-					//		{
-					//			var sc = new SingleCard(HearthDb.Cards.GetFromName((string)SearchList.SelectedItem, HearthDb.Enums.Language.enUS).Id);
-					//			deck.Cards.Add(sc);
-					//		}
-					//	}
-					//	break;
+				case Key.Enter:
+					Log.Info(_viewModel.ToString());
+					if (_viewModel != null)
+					{
+						Log.Info(SearchList.SelectedItem.ToString());
+						if (SearchList.SelectedIndex >= 0)
+						{
+							var sc = ((HDTCard)SearchList.SelectedItem);
+							_viewModel.AddCard(sc);
+						}
+					}
+					break;
 			}
 			SearchList.ScrollIntoView(SearchList.SelectedItem);
 		}
 
 		private void ButtonAddCard_Click(object sender, RoutedEventArgs e)
 		{
-			var deck = (ArchetypeDeckViewModel)DataContext;
-			if (deck != null)
+			if (_viewModel != null)
 			{
 				Log.Info(SearchList.SelectedItem.ToString());
 				if (SearchList.SelectedIndex >= 0)
 				{
-					deck.AddCard((HDTCard)SearchList.SelectedItem);
+					_viewModel.AddCard((HDTCard)SearchList.SelectedItem);
 				}
 			}
 		}
 
 		private void ButtonRemoveCard_Click(object sender, RoutedEventArgs e)
 		{
-			var deck = (ArchetypeDeckViewModel)DataContext;
-			if (deck != null)
+			if (_viewModel != null)
 			{
 				if (ListViewCards.SelectedIndex >= 0)
 				{
 					Log.Info(ListViewCards.SelectedItem.ToString());
-					deck.RemoveCard((HDTCard)ListViewCards.SelectedItem);
+					_viewModel.RemoveCard((HDTCard)ListViewCards.SelectedItem);
 				}
 			}
 		}

@@ -30,12 +30,18 @@ namespace HDT.Plugins.EndGame.Controls
 			DeckFormatFilterSelection.SelectedItem = Format.All;
 			DeckList.ItemsSource = _manager.Decks;
 			DeckList.SelectedIndex = 0;
-			ArchetypeDeck.DataContext = new ArchetypeDeckViewModel((ArchetypeDeck)_manager.Decks.First());
+			ArchetypeDeck.DataContext = new ArchetypeDeckViewModel(_manager.Decks.First());
 		}
 
 		private void DeckList_SelectionChanged(object sender, RoutedEventArgs e)
 		{
-			ArchetypeDeck.DataContext = new ArchetypeDeckViewModel((ArchetypeDeck)DeckList.SelectedItem);
+			ListBox box = sender as ListBox;
+			ArchetypeDeck.DataContext = new ArchetypeDeckViewModel(
+				_manager.Get(((ArchetypeDeck)DeckList.SelectedItem).Name)); // TODO could be null
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
 		}
 	}
 }
