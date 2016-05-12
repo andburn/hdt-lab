@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HDT.Plugins.EndGame.Tests.Archetype
@@ -26,9 +26,10 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		{
 			var deck = new ConcreteDeck();
 
-			Assert.AreEqual(PlayerClass.WARRIOR, deck.Klass);
-			Assert.AreEqual(Format.All, deck.Format);
-			Assert.IsNull(deck.Cards);
+			Assert.AreEqual(PlayerClass.ANY, deck.Klass);
+			Assert.AreEqual(GameFormat.ANY, deck.Format);
+			Assert.AreNotEqual(Guid.Empty, deck.Id);
+			Assert.IsTrue(deck.Cards.Count == 0);
 		}
 
 		[TestMethod]
@@ -41,23 +42,46 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			var deck = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, cards);
 
 			Assert.AreEqual(PlayerClass.DRUID, deck.Klass);
-			Assert.AreEqual(Format.Standard, deck.Format);
+			Assert.AreEqual(GameFormat.STANDARD, deck.Format);
 			Assert.AreEqual(cards, deck.Cards);
+			Assert.AreNotEqual(Guid.Empty, deck.Id);
 		}
 
 		[TestMethod]
 		public void EqualByReference()
 		{
-			var cards = new List<Card>() {
-				new Card("AB_123", 1),
-				new Card("AB_456", 2)
-			};
-			var deck = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, cards);
-			Assert.AreEqual(deck, new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, cards));
+			var deck = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, null);
+			Assert.AreEqual(deck, deck);
 		}
 
 		[TestMethod]
 		public void EqualByValue()
+		{
+			var deckA = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, null);
+			deckA.Id = Guid.Parse("d493e262-68ed-4d37-93ad-d81e8cef9b21");
+			var deckB = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, null);
+			deckB.Id = Guid.Parse("d493e262-68ed-4d37-93ad-d81e8cef9b21");
+			Assert.AreEqual(deckA, deckB);
+		}
+
+		[TestMethod]
+		public void NotEqualIfDifferentId()
+		{
+			Assert.AreNotEqual(new ConcreteDeck(), new ConcreteDeck());
+		}
+
+		[TestMethod]
+		public void HashCodeSameIfEqual()
+		{
+			var deckA = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, null);
+			deckA.Id = Guid.Parse("d493e262-68ed-4d37-93ad-d81e8cef9b21");
+			var deckB = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD, null);
+			deckB.Id = Guid.Parse("d493e262-68ed-4d37-93ad-d81e8cef9b21");
+			Assert.AreEqual(deckA.GetHashCode(), deckB.GetHashCode());
+		}
+
+		[TestMethod]
+		public void DecksWithSamePropsMatch()
 		{
 			var deckA = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD,
 				new List<Card>() {
@@ -71,7 +95,24 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 					new Card("AB_456", 2)
 				}
 			);
-			Assert.AreEqual(deckA, deckB);
+			Assert.IsTrue(deckA.Matches(deckB));
+		}
+
+		[TestMethod]
+		public void DecksWithDifferentPropsDoNotMatch()
+		{
+			var deckA = new ConcreteDeck(PlayerClass.HUNTER, GameFormat.STANDARD,
+				new List<Card>() {
+					new Card("AB_897", 1)
+				}
+			);
+			var deckB = new ConcreteDeck(PlayerClass.DRUID, GameFormat.STANDARD,
+				new List<Card>() {
+					new Card("AB_123", 1),
+					new Card("AB_456", 2)
+				}
+			);
+			Assert.IsFalse(deckA.Matches(deckB));
 		}
 	}
 }

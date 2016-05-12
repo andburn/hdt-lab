@@ -40,16 +40,16 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		{
 			var deck = new PlayedDeck();
 			Assert.AreEqual(0, deck.Turns);
-			Assert.AreEqual(PlayerClass.WARRIOR, deck.Klass);
+			Assert.AreEqual(PlayerClass.ANY, deck.Klass);
 			Assert.AreEqual(GameFormat.ANY, deck.Format);
-			Assert.IsNull(deck.Cards);
+			Assert.IsTrue(deck.Cards.Count == 0);
 		}
 
 		[TestMethod]
 		public void ParamConstructorAssignsProps()
 		{
 			Assert.AreEqual(PlayerClass.WARRIOR, _playDeck.Klass);
-			Assert.AreEqual(GameFormat.ANY, _playDeck.Format);
+			Assert.AreEqual(GameFormat.STANDARD, _playDeck.Format);
 			Assert.AreEqual(7, _playDeck.Turns);
 			Assert.AreEqual(6, _playDeck.Cards.Count);
 		}

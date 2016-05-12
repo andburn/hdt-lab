@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HDT.Plugins.EndGame.Tests.Archetype
@@ -15,9 +14,9 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			var deck = new ArchetypeDeck();
 			Assert.IsNull(deck.Name);
 			Assert.IsNull(deck.Style);
-			Assert.AreEqual(PlayerClass.WARRIOR, deck.Klass);
-			Assert.AreEqual(Format.All, deck.Format);
-			Assert.IsNull(deck.Cards);
+			Assert.AreEqual(PlayerClass.ANY, deck.Klass);
+			Assert.AreEqual(GameFormat.ANY, deck.Format);
+			Assert.IsTrue(deck.Cards.Count == 0);
 		}
 
 		[TestMethod]
@@ -33,7 +32,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			Assert.AreEqual("Control Warrior", deck.Name);
 			Assert.AreEqual(ArchetypeStyles.CONTROL, deck.Style);
 			Assert.AreEqual(PlayerClass.WARRIOR, deck.Klass);
-			Assert.AreEqual(Format.Standard, deck.Format);
+			Assert.AreEqual(GameFormat.STANDARD, deck.Format);
 			Assert.IsTrue(deck.Cards.Count == 0);
 		}
 

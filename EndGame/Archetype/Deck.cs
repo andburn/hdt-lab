@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HDT.Plugins.EndGame.Enums;
 
@@ -6,12 +7,15 @@ namespace HDT.Plugins.EndGame.Archetype
 {
 	public abstract class Deck
 	{
+		public Guid Id { get; set; }
 		public PlayerClass Klass { get; set; }
 		public GameFormat Format { get; set; }
 		public List<Card> Cards { get; set; }
 
 		public Deck()
 		{
+			Id = Guid.NewGuid();
+			Cards = new List<Card>();
 		}
 
 		public Deck(PlayerClass klass, GameFormat format, List<Card> cards)
@@ -43,18 +47,18 @@ namespace HDT.Plugins.EndGame.Archetype
 				return false;
 			}
 
-			Cards.Sort();
-			d.Cards.Sort();
-
-			return Klass == d.Klass && Format == d.Format
-				&& Cards.SequenceEqual(d.Cards);
+			return Id.Equals(d.Id);
 		}
 
 		public override int GetHashCode()
 		{
-			// TODO hash code can't include cards, any change add/remove gives different hash!
-			// now will create large buckets, add uuid maybe
-			return (int)Klass ^ (int)Format;
+			return Id.GetHashCode();
+		}
+
+		public bool Matches(Deck d)
+		{
+			return Klass == d.Klass && Format == d.Format
+				&& Cards.OrderBy(x => x).SequenceEqual(d.Cards.OrderBy(x => x));
 		}
 	}
 }

@@ -11,7 +11,8 @@ namespace HDT.Plugins.EndGame.Archetype
 	{
 		public int Turns { get; set; }
 
-		public PlayedDeck() : base()
+		public PlayedDeck()
+			: base()
 		{
 		}
 
