@@ -16,7 +16,7 @@ namespace HDT.Plugins.EndGame.Windows
 		{
 			InitializeComponent();
 
-			_manager = new ArchetypeManager();
+			_manager = ArchetypeManager.Instance;
 			_manager.LoadDecks();
 
 			DeckView.DataContext = new ArchetypeDeckViewModel(_manager.Decks.First());

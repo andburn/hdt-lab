@@ -8,7 +8,8 @@ namespace HDT.Plugins.EndGame.Archetype
 		public string Name { get; set; }
 		public ArchetypeStyle Style { get; set; }
 
-		public ArchetypeDeck() : base()
+		public ArchetypeDeck()
+			: base()
 		{
 		}
 

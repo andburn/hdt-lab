@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using HDT.Plugins.EndGame.Archetype;
@@ -9,12 +10,27 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HDT.Plugins.EndGame.Tests.Archetype
 {
+	// TODO: Refactor common elements out of tests
+
 	[TestClass]
 	public class ArchetypeManagerTest
 	{
-		private ArchetypeManager _manager;
+		private const int DEFAULT_STYLE_COUNT = 4;
 
-		private string _json = "[{\"Name\":\"One\",\"Style\":{\"Name\":\"Control\",\"Style\":0},\"Klass\":4,\"Format\":1,\"Cards\":[{\"Id\":\"AB_123\",\"Count\":1},{\"Id\":\"AB_124\",\"Count\":1},{\"Id\":\"AB_125\",\"Count\":1}]}]";
+		private ArchetypeManager _manager = ArchetypeManager.Instance;
+
+		private string _json = "[{\"Name\":\"One\",\"Style\":{\"Name\":\"Control\",\"Style\":0},\"Id\":\"d493e262-68ed-4d37-93ad-d81e8cef9b21\",\"Klass\":3,\"Format\":1,\"Cards\":[{\"Id\":\"AB_123\",\"Count\":1},{\"Id\":\"AB_124\",\"Count\":1},{\"Id\":\"AB_125\",\"Count\":1}]}]";
+
+		private ArchetypeDeck _sample = new ArchetypeDeck(
+			"Face ",
+			PlayerClass.HUNTER,
+			GameFormat.STANDARD,
+			ArchetypeStyles.AGGRO,
+			new List<Card>() {
+				new SingleCard("AB_123"),
+				new SingleCard("AB_456")
+			}
+		);
 
 		private List<ArchetypeDeck> _decks = new List<ArchetypeDeck>() {
 			new ArchetypeDeck("One", PlayerClass.HUNTER, GameFormat.STANDARD, ArchetypeStyles.CONTROL,
@@ -22,37 +38,28 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 					new SingleCard("AB_123"),
 					new SingleCard("AB_124"),
 					new SingleCard("AB_125")
-				})
+				}
+			)
 		};
 
 		[TestInitialize]
 		public void Setup()
 		{
-			_manager = new ArchetypeManager();
+			_manager.Reset();
 		}
 
 		[TestMethod]
 		public void AddDeck()
 		{
-			Assert.AreEqual(0, _manager.Decks.Count);
-			_manager.Add(new ArchetypeDeck());
+			_manager.AddDeck(new ArchetypeDeck());
 			Assert.AreEqual(1, _manager.Decks.Count);
 		}
 
 		[TestMethod]
 		public void DontAddDuplicateDeck()
 		{
-			_manager.Add(new ArchetypeDeck(
-				"Face ",
-				PlayerClass.HUNTER,
-				GameFormat.STANDARD,
-				ArchetypeStyles.AGGRO,
-				new List<Card>() {
-					new SingleCard("AB_123"),
-					new SingleCard("AB_456")
-				}
-			));
-			_manager.Add(new ArchetypeDeck(
+			_manager.AddDeck(_sample);
+			_manager.AddDeck(new ArchetypeDeck(
 				"Face ",
 				PlayerClass.HUNTER,
 				GameFormat.STANDARD,
@@ -68,17 +75,17 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		[TestMethod]
 		public void RemoveDeck()
 		{
-			_manager.Add(new ArchetypeDeck(
-				"Face ",
-				PlayerClass.HUNTER,
-				GameFormat.STANDARD,
-				ArchetypeStyles.AGGRO,
-				new List<Card>() {
-					new SingleCard("AB_123"),
-					new SingleCard("AB_456")
-				}
-			));
-			_manager.Add(new ArchetypeDeck(
+			_manager.AddDeck(_sample);
+			Assert.AreEqual(1, _manager.Decks.Count);
+			_manager.RemoveDeck(_sample);
+			Assert.AreEqual(0, _manager.Decks.Count);
+		}
+
+		[TestMethod]
+		public void RemoveMatchingDecks()
+		{
+			_manager.AddDeck(_sample);
+			_manager.AddDeck(new ArchetypeDeck(
 				"rAmp",
 				PlayerClass.DRUID,
 				GameFormat.WILD,
@@ -89,7 +96,7 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 				}
 			));
 			Assert.AreEqual(2, _manager.Decks.Count);
-			_manager.Remove(new ArchetypeDeck(
+			_manager.RemoveDeck(new ArchetypeDeck(
 				"rAmp",
 				PlayerClass.DRUID,
 				GameFormat.WILD,
@@ -105,17 +112,8 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		[TestMethod]
 		public void FindBestMatch()
 		{
-			_manager.Add(new ArchetypeDeck(
-				"Face ",
-				PlayerClass.HUNTER,
-				GameFormat.STANDARD,
-				ArchetypeStyles.AGGRO,
-				new List<Card>() {
-					new SingleCard("AB_123"),
-					new SingleCard("AB_456")
-				}
-			));
-			_manager.Add(new ArchetypeDeck(
+			_manager.AddDeck(_sample);
+			_manager.AddDeck(new ArchetypeDeck(
 				"rAmp",
 				PlayerClass.DRUID,
 				GameFormat.WILD,
@@ -134,7 +132,43 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			Assert.AreEqual("rAmp", _manager.Find(deck).First().Name);
 		}
 
-		// TODO: Improve these tests, a lot!
+		[TestMethod]
+		public void DefaultDeckStyles()
+		{
+			Assert.AreEqual(DEFAULT_STYLE_COUNT, _manager.Styles.Count);
+		}
+
+		[TestMethod]
+		public void AddDeckStyle()
+		{
+			_manager.AddStyle(new ArchetypeStyle("Mill", PlayStyle.CUSTOM));
+			Assert.AreEqual(DEFAULT_STYLE_COUNT + 1, _manager.Styles.Count);
+		}
+
+		[TestMethod]
+		public void DoNotAddDuplicateDeckStyle()
+		{
+			_manager.AddStyle(new ArchetypeStyle("Mill", PlayStyle.CUSTOM));
+			_manager.AddStyle(new ArchetypeStyle("Mill", PlayStyle.CUSTOM));
+			Assert.AreEqual(DEFAULT_STYLE_COUNT + 1, _manager.Styles.Count);
+		}
+
+		[TestMethod]
+		public void RemoveCustomDeckStyle()
+		{
+			_manager.AddStyle(new ArchetypeStyle("Mill", PlayStyle.CUSTOM));
+			_manager.RemoveStyle(new ArchetypeStyle("Mill", PlayStyle.CUSTOM));
+			Assert.AreEqual(DEFAULT_STYLE_COUNT, _manager.Styles.Count);
+		}
+
+		[TestMethod]
+		public void RemoveDefaultDeckStyleFails()
+		{
+			_manager.RemoveStyle(ArchetypeStyles.CONTROL);
+			Assert.AreEqual(DEFAULT_STYLE_COUNT, _manager.Styles.Count);
+		}
+
+		// TODO Improve file save/load tests
 
 		[TestMethod]
 		public void LoadArcheyptesFromFile()
@@ -146,9 +180,11 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 		}
 
 		[TestMethod]
-		public void SaveArcheyptesFromFile()
+		public void SaveArcheyptesToFile()
 		{
-			_manager.Add(_decks.First());
+			var deck = _decks.First();
+			deck.Id = Guid.Parse("d493e262-68ed-4d37-93ad-d81e8cef9b21");
+			_manager.AddDeck(deck);
 			_manager.SaveDecks("data/saved.json");
 			var read = File.ReadAllText("data/saved.json");
 			Assert.AreEqual(_json, read);

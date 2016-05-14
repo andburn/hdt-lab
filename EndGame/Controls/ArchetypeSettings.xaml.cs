@@ -18,7 +18,7 @@ namespace HDT.Plugins.EndGame.Controls
 		public ArchetypeSettings()
 		{
 			InitializeComponent();
-			_manager = new ArchetypeManager();
+			_manager = ArchetypeManager.Instance;
 			_manager.LoadDecks();
 			LoadArchetype();
 		}
