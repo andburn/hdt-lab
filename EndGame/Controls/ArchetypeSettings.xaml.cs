@@ -4,13 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using HDT.Plugins.EndGame.Archetype;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
 
 namespace HDT.Plugins.EndGame.Controls
 {
-	/// <summary>
-	/// Interaction logic for ArchetypeSettings.xaml
-	/// </summary>
 	public partial class ArchetypeSettings : UserControl
 	{
 		private ArchetypeManager _manager;
@@ -26,22 +22,26 @@ namespace HDT.Plugins.EndGame.Controls
 		private void LoadArchetype()
 		{
 			DeckClassFilterSelection.ItemsSource = Enum.GetValues(typeof(PlayerClass));
-			DeckFormatFilterSelection.ItemsSource = Enum.GetValues(typeof(Format));
-			DeckFormatFilterSelection.SelectedItem = Format.All;
+			DeckFormatFilterSelection.ItemsSource = Enum.GetValues(typeof(GameFormat));
+			DeckFormatFilterSelection.SelectedItem = GameFormat.ANY;
 			DeckList.ItemsSource = _manager.Decks;
 			DeckList.SelectedIndex = 0;
-			ArchetypeDeck.DataContext = new ArchetypeDeckViewModel(_manager.Decks.First());
+			var deck = _manager.Decks.FirstOrDefault();
+			if (deck != null)
+				ArchetypeDeck.DataContext = new ArchetypeDeckViewModel(deck);
 		}
 
 		private void DeckList_SelectionChanged(object sender, RoutedEventArgs e)
 		{
 			ListBox box = sender as ListBox;
-			ArchetypeDeck.DataContext = new ArchetypeDeckViewModel(
-				_manager.Get(((ArchetypeDeck)DeckList.SelectedItem).Name)); // TODO could be null
+			var deck = _manager.GetDeck(box.SelectedItem);
+			if (deck != null)
+				ArchetypeDeck.DataContext = new ArchetypeDeckViewModel(deck);
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e)
+		private void ButtonNew_Click(object sender, RoutedEventArgs e)
 		{
+			_manager.AddDeck(new ArchetypeDeck());
 		}
 	}
 }

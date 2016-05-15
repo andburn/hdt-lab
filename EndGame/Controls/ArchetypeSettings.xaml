@@ -18,7 +18,7 @@
             <ComboBox x:Name="DeckFormatFilterSelection"></ComboBox>
             <ListBox x:Name="DeckList"
                      SelectionChanged="DeckList_SelectionChanged" SelectionMode="Single"></ListBox>
-            <Button Click="Button_Click">New</Button>
+            <Button Click="ButtonNew_Click">New</Button>
             <Button>Delete</Button>
         </StackPanel>
         <local:ArchetypeDeckView x:Name="ArchetypeDeck" Grid.Column="1" />

@@ -10,8 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HDT.Plugins.EndGame.Tests.Archetype
 {
-	// TODO: Refactor common elements out of tests
-
 	[TestClass]
 	public class ArchetypeManagerTest
 	{
@@ -168,15 +166,25 @@ namespace HDT.Plugins.EndGame.Tests.Archetype
 			Assert.AreEqual(DEFAULT_STYLE_COUNT, _manager.Styles.Count);
 		}
 
-		// TODO Improve file save/load tests
+		[TestMethod]
+		public void StylesPropDoesNotAlterBackingFields()
+		{
+			_manager.Styles.Add(ArchetypeStyles.CONTROL);
+			Assert.AreEqual(DEFAULT_STYLE_COUNT, _manager.Styles.Count);
+			_manager.Styles.Clear();
+			Assert.AreEqual(DEFAULT_STYLE_COUNT, _manager.Styles.Count);
+		}
 
 		[TestMethod]
 		public void LoadArcheyptesFromFile()
 		{
 			_manager.LoadDecks("data/decks.json");
 			Assert.AreEqual(1, _manager.Decks.Count);
-			Assert.AreEqual(_decks[0].Name, _manager.Decks[0].Name);
-			Assert.AreEqual(_decks[0].Klass, _manager.Decks[0].Klass);
+			Assert.AreEqual(Guid.Parse("d493e262-68ed-4d37-93ad-d81e8cef9b21"), _manager.Decks[0].Id);
+			Assert.AreEqual("Some Deck", _manager.Decks[0].Name);
+			Assert.AreEqual(PlayerClass.HUNTER, _manager.Decks[0].Klass);
+			Assert.AreEqual(GameFormat.STANDARD, _manager.Decks[0].Format);
+			Assert.AreEqual(3, _manager.Decks[0].Cards.Count);
 		}
 
 		[TestMethod]

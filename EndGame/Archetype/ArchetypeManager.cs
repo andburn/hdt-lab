@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Hearthstone_Deck_Tracker.Stats;
+using Hearthstone_Deck_Tracker.Utility.Logging;
 using Newtonsoft.Json;
 
 namespace HDT.Plugins.EndGame.Archetype
@@ -57,29 +59,40 @@ namespace HDT.Plugins.EndGame.Archetype
 		public void Reset()
 		{
 			_archetypes.Clear();
-			_defaultStyles = new List<ArchetypeStyle>() {
-				ArchetypeStyles.AGGRO,
-				ArchetypeStyles.COMBO,
-				ArchetypeStyles.CONTROL,
-				ArchetypeStyles.MIDRANGE
-			};
 			_customStyles.Clear();
 		}
 
-		// TODO some error handling on file IO
 		public void LoadDecks(string file = null)
 		{
-			var decks = JsonConvert.DeserializeObject<List<ArchetypeDeck>>(
-				File.ReadAllText(file ?? DECKS_FILE));
-			Decks.Clear();
-			foreach (var d in decks)
-				AddDeck(d);
+			List<ArchetypeDeck> decks = new List<ArchetypeDeck>();
+			try
+			{
+				decks = JsonConvert.DeserializeObject<List<ArchetypeDeck>>(
+					File.ReadAllText(file ?? DECKS_FILE));
+			}
+			catch (Exception e)
+			{
+				Log.Error(e);
+			}
+			if (decks.Count > 0)
+			{
+				Decks.Clear();
+				foreach (var d in decks)
+					AddDeck(d);
+			}
 		}
 
-		// TODO some error handling on file IO
 		public void SaveDecks(string file = null)
 		{
-			File.WriteAllText(file ?? DECKS_FILE, JsonConvert.SerializeObject(_archetypes));
+			try
+			{
+				File.WriteAllText(file ?? DECKS_FILE,
+					JsonConvert.SerializeObject(_archetypes));
+			}
+			catch (Exception e)
+			{
+				Log.Error(e);
+			}
 		}
 
 		public void AddDeck(ArchetypeDeck deck)
@@ -100,10 +113,21 @@ namespace HDT.Plugins.EndGame.Archetype
 				_archetypes.RemoveAll(x => x.Matches(deck));
 		}
 
-		// TODO necessary
-		public ArchetypeDeck Get(string name)
+		public ArchetypeDeck GetDeck(Guid id)
 		{
-			return _archetypes.FirstOrDefault(x => x.Name == name);
+			return _archetypes.FirstOrDefault(x => x.Id == id);
+		}
+
+		public ArchetypeDeck GetDeck(object obj)
+		{
+			if (obj == null)
+				return null;
+
+			ArchetypeDeck d = obj as ArchetypeDeck;
+			if (d == null)
+				return null;
+
+			return GetDeck(d.Id);
 		}
 
 		public List<ArchetypeDeck> Find(GameStats game)
@@ -114,7 +138,7 @@ namespace HDT.Plugins.EndGame.Archetype
 
 		public List<ArchetypeDeck> Find(PlayedDeck deck)
 		{
-			// TODO remove any 0 or even below a threshold?
+			// TODO remove any 0 and/or use a a threshold
 			return _archetypes.OrderByDescending(x => deck.Similarity(x)).ToList();
 		}
 
