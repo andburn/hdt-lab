@@ -13,14 +13,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
-            <ComboBox x:Name="DeckClassFilterSelection"></ComboBox>
-            <ComboBox x:Name="DeckFormatFilterSelection"></ComboBox>
-            <ListBox x:Name="DeckList"
-                     SelectionChanged="DeckList_SelectionChanged" SelectionMode="Single"></ListBox>
-            <Button Click="ButtonNew_Click">New</Button>
-            <Button>Delete</Button>
-        </StackPanel>
+        <local:ArchetypeDeckListView x:Name="ArchetypeDeckList" DeckSelect="ArchetypeDeckList_DeckSelect" Grid.Column="0" />
         <local:ArchetypeDeckView x:Name="ArchetypeDeck" Grid.Column="1" />
     </Grid>
 </UserControl>

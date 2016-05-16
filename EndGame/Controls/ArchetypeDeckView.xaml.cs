@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using HDT.Plugins.EndGame.Enums;
-using Hearthstone_Deck_Tracker.Enums;
 using Hearthstone_Deck_Tracker.Utility.Logging;
 using HDTCard = Hearthstone_Deck_Tracker.Hearthstone.Card;
 
@@ -24,7 +23,7 @@ namespace HDT.Plugins.EndGame.Controls
 			_viewModel = (ArchetypeDeckViewModel)DataContext;
 
 			ComboBoxKlass.ItemsSource = Enum.GetValues(typeof(PlayerClass));
-			ComboBoxFormat.ItemsSource = Enum.GetValues(typeof(Format));
+			ComboBoxFormat.ItemsSource = Enum.GetValues(typeof(GameFormat));
 		}
 
 		private void ArchetypeDeckView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
