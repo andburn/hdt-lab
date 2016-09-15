@@ -1,0 +1,115 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+#container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#classSelect {
+	background-color: #ededed;
+	width: 100px;
+	padding: 10px;
+	border-right: 2px solid gray;
+}
+
+#preview {
+	background-repeat: no-repeat;
+	position: relative;
+	width: 400px;
+	height: 320px;
+}
+
+#preview img {
+	position: absolute;
+	left: 150px;
+}
+
+#colorSelect {
+	border-left: 2px solid gray;
+	padding: 10px 10px 10px 20px;
+}
+
+#colorSelect p {
+	font-size: 12px;
+}
+
+#colorSelect input[type="text"] {
+  width: 30px;
+  margin-left: 8px;
+}
+
+#colorSelect input[type="range"] {
+  width: 300px;
+}
+
+div.display {
+	width: 240px;
+	height: 320px;
+	background-repeat: no-repeat;
+	position: relative;
+}
+
+div.display p {
+	position: absolute;
+	top: 145px;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	font-size: 16px;
+	color: white;
+}
+
+.druid-color {
+	filter: hue-rotate(70deg) saturate(85%) brightness(94%);
+	-webkit-filter: hue-rotate(70deg) saturate(85%) brightness(94%);
+}
+
+.hunter-color {
+	filter: hue-rotate(150deg) saturate(80%) brightness(100%);
+	-webkit-filter: hue-rotate(150deg) saturate(60%) brightness(100%);
+}
+
+.mage-color {
+	filter: hue-rotate(298deg) saturate(74%) brightness(85%);
+	-webkit-filter: hue-rotate(298deg) saturate(74%) brightness(85%);
+}
+
+.paladin-color {
+	filter: hue-rotate(18deg) saturate(90%) brightness(90%);
+	-webkit-filter: hue-rotate(18deg) saturate(90%) brightness(90%);
+	opacity: 0.7;
+}
+
+.priest-color {
+	visibility: hidden;
+}
+
+.rogue-color {
+	filter: hue-rotate(104deg) saturate(0%) brightness(78%);
+	-webkit-filter: hue-rotate(104deg) saturate(0%) brightness(78%);
+}
+
+.shaman-color {
+	filter: hue-rotate(220deg) saturate(50%) brightness(100%);
+	-webkit-filter: hue-rotate(220deg) saturate(50%) brightness(100%);
+}
+
+.warlock-color {
+	filter: hue-rotate(306deg) saturate(75%) brightness(55%);
+	-webkit-filter: hue-rotate(306deg) saturate(75%) brightness(55%);
+}
+
+.warrior-color {
+	filter: hue-rotate(41deg) saturate(52%) brightness(70%);
+	-webkit-filter: hue-rotate(41deg) saturate(52%) brightness(70%);
+}
+
+.neutral-color {	
+	filter: hue-rotate(160deg) saturate(0%) brightness(80%);
+	-webkit-filter: hue-rotate(160deg) saturate(0%) brightness(80%);
+	opacity: 0.4;
+}
