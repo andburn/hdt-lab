@@ -1,4 +1,3 @@
 ## Hearthstone Lab
 
-This is a repo for me to store ideas or other work in progress stuff related to Hearthstone.
-
+A testing ground for ideas and for storing archived hearthstone projects.
