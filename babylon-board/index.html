@@ -33,6 +33,27 @@
         var canvas = document.getElementById("renderCanvas");
         var engine = new BABYLON.Engine(canvas, true);
 
+        var boardPositions = [
+            new BABYLON.Vector3(-1.1, 0.2, -2),
+            new BABYLON.Vector3(0, 0.2, -2),
+            new BABYLON.Vector3(1.1, 0.2, -2)
+        ];
+        
+        var handPositions = [
+            new BABYLON.Vector3(-1.1, 0.2, -4),
+            new BABYLON.Vector3(0, 0.2, -4),
+            new BABYLON.Vector3(1.1, 0.2, -4)
+        ];
+        
+        var nextBoardSlot = 0;
+        
+        var playCard = function(mesh, i) {
+            BABYLON.Animation.CreateAndStartAnimation(
+                'cardDraw', mesh, "position", 30, 20,
+                mesh.position, boardPositions[nextBoardSlot++],
+                BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+        };
+        
         var createScene = function () {
         
             var scene = new BABYLON.Scene(engine);
@@ -44,29 +65,28 @@
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7;
         
-            var card = BABYLON.Mesh.CreatePlane("card", 1, scene);
+            var card = BABYLON.Mesh.CreatePlane("card1", 1, scene);
             var mat = new BABYLON.StandardMaterial("cardMat", scene);
             mat.emissiveColor = new BABYLON.Color3.Green;
             card.material = mat;
             card.scaling = new BABYLON.Vector3(1, 2, 1);
             card.rotation.x = Math.PI / 2;
-            card.position.y += 0.2;
-            card.position.z -= 2;
+            card.position = handPositions[0];
         
             var card2 = new BABYLON.InstancedMesh("card2", card);
-            card2.position.x -= 1.1;
+            card.position = handPositions[1];
             var card3 = new BABYLON.InstancedMesh("card3", card);
-            card3.position.x = 0;
-            
-            BABYLON.Animation.CreateAndStartAnimation(
-                'cardDraw', card3, "position", 30, 20,
-                new BABYLON.Vector3(0, 0.2, -5),
-                new BABYLON.Vector3(1.1, 0.2, -2),
-                BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            card.position = handPositions[2];
         
             // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
             var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
             ground.receiveShadows = true;
+        
+            scene.onPointerDown = function (evt, pickResult) {
+                if (pickResult.hit && pickResult.pickedMesh.name.startsWith("card")) {
+                    playCard(pickResult.pickedMesh, 0);
+                }
+            };
         
             return scene;
         
