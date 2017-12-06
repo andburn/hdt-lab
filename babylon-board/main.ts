@@ -18,6 +18,10 @@ class Card {
         this._mesh.position = new BABYLON.Vector3(v.x, v.y, v.z);
     }
 
+    rotate(t: number): void {
+        this._mesh.rotation = new BABYLON.Vector3(0, 0, t);
+    }
+
     delete(): void {
         this._mesh.dispose();
     }
@@ -27,10 +31,10 @@ class Board {
     private _mesh: BABYLON.Mesh;
     private _scene: BABYLON.Scene;
 
-    friendly: HorizontalGroup;
-    enemy: HorizontalGroup;
-    playerHand: HorizontalGroup;
-    opponentHand: HorizontalGroup;
+    friendly: CardGroup;
+    enemy: CardGroup;
+    playerHand: CardGroup;
+    opponentHand: CardGroup;
     
     constructor(scene: BABYLON.Scene, color: BABYLON.Color3) {
         this._mesh = BABYLON.MeshBuilder.CreatePlane("board", 
@@ -41,7 +45,7 @@ class Board {
         // init zones
         this.friendly = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, -1, -0.2));
         this.enemy = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 1, -0.2));
-        this.playerHand = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, -3.2, -0.2));
+        this.playerHand = new ArcGroup(this._scene, new BABYLON.Vector3(0, -3.2, -0.2));
         this.opponentHand = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 3.2, -0.2));
     }
 
@@ -80,12 +84,18 @@ class Game {
 
         let board = new Board(this._scene, BABYLON.Color3.Teal())
 
+        let disc = BABYLON.MeshBuilder.CreateDisc("disc", {radius: 1, tessellation: 20}, this._scene);
+        disc.position = new BABYLON.Vector3(0, -3.2, -0.1)
+        let mat = new BABYLON.StandardMaterial("discmat", this._scene);
+        mat.emissiveColor = BABYLON.Color3.Green();
+        disc.material = mat;
+
         let friendly = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, -1, -0.2));
         let enemy = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 1, -0.2));
                
         board.friendly.add(7);
         board.enemy.add(4);
-        board.playerHand.add(4);
+        board.playerHand.add(6);
         board.opponentHand.add(5);
 
         setTimeout(() => {

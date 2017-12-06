@@ -53,3 +53,56 @@ class HorizontalGroup implements CardGroup {
         }
     }
 }
+
+class ArcGroup implements CardGroup {
+    private _scene: BABYLON.Scene;
+    private _cards: Card[];
+
+    center: BABYLON.Vector3;
+
+    constructor(scene: BABYLON.Scene, center: BABYLON.Vector3) {
+        this.center = center;
+        this._scene = scene;
+        this._cards = [];
+    }
+
+    add(num: number): void {
+        console.log(`adding ${num} cards`)
+        for (let i = 0; i < num; i++) {
+            this._cards.push(new Card(this._scene, BABYLON.Color3.Yellow()))
+        }
+        this.refresh();
+    }
+    
+    remove(idx: number): void {
+        if (this._cards.length >= idx) {
+            console.log(`removing card at index ${idx}`)
+            // remove the object from the scene
+            this._cards[idx].delete();
+            // remove it from the card list also
+            let merged = this._cards.slice(0, idx);
+            if (this._cards.length > idx) {
+                merged = merged.concat(this._cards.slice(idx + 1));
+            }
+            this._cards = merged;
+            // realign
+            this.refresh();
+        }
+    }
+
+    private refresh() {
+        const v = this.center;
+        const n = this._cards.length;
+        const r = 1;
+        const theta = 2 * Math.PI / n;
+        const pos = new BABYLON.Vector3(v.x, v.y, v.z);
+        console.log(`refresh ${n} cards`);        
+        
+        for (let i = 0; i < n; i++) {
+            let angle = theta * i;
+            pos.x = Math.cos(angle) * r + v.x;
+            pos.y = Math.sin(angle) * r + v.y;
+            this._cards[i].move(pos);
+        }
+    }
+}
