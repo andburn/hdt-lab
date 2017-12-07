@@ -45,8 +45,8 @@ class Board {
         // init zones
         this.friendly = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, -1, -0.2));
         this.enemy = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 1, -0.2));
-        this.playerHand = new ArcGroup(this._scene, new BABYLON.Vector3(0, -3.2, -0.2));
-        this.opponentHand = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 3.2, -0.2));
+        this.playerHand = new CurvedGroup(this._scene, new BABYLON.Vector3(0, -3.2, -0.2));
+        this.opponentHand = new CurvedGroup(this._scene, new BABYLON.Vector3(0, 3.2, -0.2), true);
     }
 
     addCards(n: number, v: BABYLON.Vector3): void {
@@ -83,12 +83,6 @@ class Game {
         this._light.intensity = 0.7;
 
         let board = new Board(this._scene, BABYLON.Color3.Teal())
-
-        let disc = BABYLON.MeshBuilder.CreateDisc("disc", {radius: 1, tessellation: 20}, this._scene);
-        disc.position = new BABYLON.Vector3(0, -3.2, -0.1)
-        let mat = new BABYLON.StandardMaterial("discmat", this._scene);
-        mat.emissiveColor = BABYLON.Color3.Green();
-        disc.material = mat;
 
         let friendly = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, -1, -0.2));
         let enemy = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 1, -0.2));
