@@ -22,6 +22,10 @@ class Card {
         this._mesh.rotation = new BABYLON.Vector3(0, 0, t);
     }
 
+    rotation(v: BABYLON.Vector3): void {
+        this._mesh.rotation = v;
+    }
+
     delete(): void {
         this._mesh.dispose();
     }
@@ -97,7 +101,6 @@ class Game {
         }, 3000);
 
         setTimeout(() => {
-            board.opponentHand.remove(4);
             board.enemy.add(1);
         }, 5000);
     }
