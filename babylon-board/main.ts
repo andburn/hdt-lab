@@ -1,7 +1,7 @@
 class Card {
     private _mesh: BABYLON.Mesh;
 
-    public static Width: number = 0.7;
+    public static Width: number = 0.8;
 
     constructor(scene: BABYLON.Scene, color: BABYLON.Color3) {
         this._mesh = BABYLON.MeshBuilder.CreatePlane("card1", { 
@@ -10,7 +10,7 @@ class Card {
             sideOrientation: BABYLON.Mesh.DOUBLESIDE 
         }, scene);
         let mat = new BABYLON.StandardMaterial("cardMat", scene);
-        mat.emissiveColor = color;
+        mat.emissiveTexture = new BABYLON.Texture("./babylon_card.png", scene);
         this._mesh.material = mat;        
     }
 
@@ -86,7 +86,7 @@ class Game {
         this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this._scene);
         this._light.intensity = 0.7;
 
-        let board = new Board(this._scene, BABYLON.Color3.Teal())
+        let board = new Board(this._scene, BABYLON.Color3.FromInts(160, 140, 0));
 
         let friendly = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, -1, -0.2));
         let enemy = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 1, -0.2));
@@ -96,13 +96,14 @@ class Game {
         board.playerHand.add(6);
         board.opponentHand.add(5);
 
-        setTimeout(() => {
-            board.friendly.remove(3);
-        }, 3000);
-
-        setTimeout(() => {
-            board.enemy.add(1);
-        }, 5000);
+        let wait = 0;
+        setTimeout(() => { board.playerHand.add(1); }, ++wait * 1000);
+        setTimeout(() => { board.friendly.remove(3); }, ++wait * 1000);
+        setTimeout(() => { board.opponentHand.add(1); }, ++wait * 1000);
+        setTimeout(() => { board.enemy.add(1); }, ++wait * 1000);
+        setTimeout(() => { board.playerHand.add(1); }, ++wait * 1000);
+        setTimeout(() => { board.friendly.add(1); }, ++wait * 1000);
+        setTimeout(() => { board.enemy.remove(1); }, ++wait * 1000);
     }
   
     doRender() : void {

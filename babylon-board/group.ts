@@ -58,8 +58,8 @@ class CurvedGroup implements CardGroup {
     private _scene: BABYLON.Scene;
     private _cards: Card[];
     private _flip: boolean;
-    private _height: number = 0.8;
-    private _width: number = 2;
+    private _height: number = 0.2;
+    private _width: number = 1;
 
     center: BABYLON.Vector3;
 
@@ -94,40 +94,48 @@ class CurvedGroup implements CardGroup {
         }
     }
 
+    private drawNormals(path: BABYLON.Path3D): void {
+        BABYLON.Mesh.CreateLines("lines", path.getCurve(), this._scene);
+        let points = path.getCurve();
+        let normals = path.getNormals();
+        let tangents = path.getTangents();
+        let binormals = path.getBinormals();
+        // draw the tangent normal axes for each point
+        for (let i = 0; i < points.length; i++) {
+            var tg = BABYLON.Mesh.CreateLines("tg", [ points[i], points[i].add(tangents[i]) ], this._scene);
+            tg.color = BABYLON.Color3.Red();
+            var no = BABYLON.Mesh.CreateLines("no", [ points[i], points[i].add(normals[i]) ], this._scene);
+            no.color = BABYLON.Color3.Blue();
+            var bi = BABYLON.Mesh.CreateLines("bi", [ points[i], points[i].add(binormals[i]) ], this._scene);
+            bi.color = BABYLON.Color3.Green();
+        }
+    }
+
     private refresh() {
-        let control = this.center.y
+        console.log(`refresh ${this._cards.length} cards`);
+        let control = this.center.y;
+        let vert = this.center.z;
         control += this._flip ? -this._height : this._height;
+        // create the curve with #card points
         let curve = BABYLON.Curve3.CreateQuadraticBezier(
             new BABYLON.Vector3(this.center.x - this._width, this.center.y, this.center.z),
             new BABYLON.Vector3(this.center.x, control, this.center.z),
             new BABYLON.Vector3(this.center.x + this._width, this.center.y, this.center.z),
             this._cards.length - 1);
         let points = curve.getPoints();
+        // create a Path3D from the curves points
         let path3d = new BABYLON.Path3D(points);
         let normals = path3d.getNormals();
         let tangents = path3d.getTangents();
         let binormals = path3d.getBinormals();
-        let li = BABYLON.Mesh.CreateLines('li', path3d.getCurve(), this._scene);
 
-        console.log(`refresh ${this._cards.length} cards`);
         for (let i = 0; i < this._cards.length; i++) {
-            let dot = BABYLON.Vector3.Dot(
-                BABYLON.Vector3.Normalize(points[i]), 
-                BABYLON.Vector3.Normalize(binormals[i])
-            );
-            let angle = Math.acos(dot);
-            this._cards[i].move(points[i]);
-            
-            // show the orthognal axes of the points to the curve
-            var tg = BABYLON.Mesh.CreateLines('tg', [ points[i], points[i].add(tangents[i]) ], this._scene);
-            tg.color = BABYLON.Color3.Red();
-            var no = BABYLON.Mesh.CreateLines('no', [ points[i], points[i].add(normals[i]) ], this._scene);
-            no.color = BABYLON.Color3.Blue();
-            var bi = BABYLON.Mesh.CreateLines('bi', [ points[i], points[i].add(binormals[i]) ], this._scene);
-            bi.color = BABYLON.Color3.Green();
-            // align to card to curve
-            let rotation = BABYLON.Vector3.RotationFromAxis(tangents[i], binormals[i], normals[i]);
-            this._cards[i].rotation(rotation);
+            // move the card to the point
+            this._cards[i].move(new BABYLON.Vector3(points[i].x, points[i].y, vert));
+            vert -= 0.05;
+            // align card rotation to the curve using tangent normal axes
+            this._cards[i].rotation(
+                BABYLON.Vector3.RotationFromAxis(tangents[i], binormals[i], normals[i]));
         }
     }
 }
