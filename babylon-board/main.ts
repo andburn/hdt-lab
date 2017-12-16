@@ -39,6 +39,8 @@ class Board {
     enemy: CardGroup;
     playerHand: CardGroup;
     opponentHand: CardGroup;
+    playerDeck: CardGroup;
+    opponentDeck: CardGroup;
     
     constructor(scene: BABYLON.Scene, color: BABYLON.Color3) {
         this._mesh = BABYLON.MeshBuilder.CreatePlane("board", 
@@ -51,6 +53,8 @@ class Board {
         this.enemy = new HorizontalGroup(this._scene, new BABYLON.Vector3(0, 1, -0.2));
         this.playerHand = new CurvedGroup(this._scene, new BABYLON.Vector3(0, -3.2, -0.2));
         this.opponentHand = new CurvedGroup(this._scene, new BABYLON.Vector3(0, 3.2, -0.2), true);
+        this.playerDeck = new StackedGroup(this._scene, new BABYLON.Vector3(4.2, -2.8, -0.3));
+        this.opponentDeck = new StackedGroup(this._scene, new BABYLON.Vector3(4.2, 2.8, -0.3));
     }
 
     addCards(n: number, v: BABYLON.Vector3): void {
@@ -97,6 +101,8 @@ class Game {
         board.opponentHand.add(5);
 
         let wait = 0;
+        setTimeout(() => { board.playerDeck.add(20); }, ++wait * 1000);
+        setTimeout(() => { board.opponentDeck.add(30); }, ++wait * 1000);
         setTimeout(() => { board.playerHand.add(1); }, ++wait * 1000);
         setTimeout(() => { board.friendly.remove(3); }, ++wait * 1000);
         setTimeout(() => { board.opponentHand.add(1); }, ++wait * 1000);
