@@ -8,7 +8,9 @@ class Game {
 
     constructor(canvasElement : string) {
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
-        this._engine = new BABYLON.Engine(this._canvas, true);        
+        this._engine = new BABYLON.Engine(this._canvas, true);
+        this.animate = this.animate.bind(this);
+        this.animatePlay = this.animatePlay.bind(this);
     }
   
     createCard(pos?: BABYLON.Vector3): BABYLON.Mesh {
@@ -25,7 +27,7 @@ class Game {
         return mesh;
     }
 
-    animate(mesh: BABYLON.Mesh, target: BABYLON.Vector3): void {
+    animate(mesh: BABYLON.Mesh, target: BABYLON.Vector3, callback?: any): void {
         const frameRate = 30;
         const pickPosition = new BABYLON.Vector3(mesh.position.x - 1, mesh.position.y, mesh.position.z - 0.8);
 
@@ -70,13 +72,78 @@ class Game {
             }
         ];
         aniMove.setKeys(aniMoveKeys);
-        // add easing function for animation end
+        // add easing function for animation end (info: http://easings.net/)
         const easeMove = new BABYLON.CubicEase();
         easeMove.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
         aniMove.setEasingFunction(easeMove);
 
         // do animation, after flip do move
         this._scene.beginDirectAnimation(mesh, [aniPick, aniFlip], 0, 1 * frameRate, false, 1, function() {
+            this._scene.beginDirectAnimation(mesh, [aniMove], 0, 2 * frameRate, false, 1, function() {
+                callback(mesh, new BABYLON.Vector3(0, -0.5, -0.2));
+            });
+        });
+    }
+
+    animatePlay(mesh: BABYLON.Mesh, target: BABYLON.Vector3): void {
+        const frameRate = 30;
+        const hoverPosition = new BABYLON.Vector3(
+            mesh.position.x, mesh.position.y, mesh.position.z - 2.5);
+
+        // lift card up
+        const aniHover = new BABYLON.Animation("aniHover", "position", frameRate, 
+            BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);        
+        const aniHoverKeys = [
+            { 
+                frame: 0, 
+                value: mesh.position 
+            }, { 
+                frame: 1 * frameRate, 
+                value: hoverPosition
+            }
+        ];
+        aniHover.setKeys(aniHoverKeys);
+        // add some sway on lift
+        const aniSway = new BABYLON.Animation("aniSway", "rotation.z", frameRate, 
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);        
+        const aniSwayKeys = [
+            { 
+                frame: 0, 
+                value: 0 
+            }, { 
+                frame: 0.25 * frameRate, 
+                value: 0.1
+            }, { 
+                frame: 0.5 * frameRate, 
+                value: -0.1
+            }, { 
+                frame: 0.75 * frameRate, 
+                value: 0.1
+            }, { 
+                frame: 1 * frameRate, 
+                value: 0
+            }
+        ];
+        aniSway.setKeys(aniSwayKeys);
+        // add some sway on lift
+        const aniMove = new BABYLON.Animation("aniMove", "position", frameRate, 
+            BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);        
+        const aniMoveKeys = [
+            { 
+                frame: 0, 
+                value: hoverPosition
+            }, { 
+                frame: 2 * frameRate, 
+                value: target
+            }
+        ];
+        aniMove.setKeys(aniMoveKeys);
+        // add easing function
+        const ease1 = new BABYLON.QuadraticEase();
+        ease1.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+        aniMove.setEasingFunction(ease1);        
+        
+        this._scene.beginDirectAnimation(mesh, [aniHover, aniSway], 0, 2 * frameRate, false, 1, function() {
             this._scene.beginDirectAnimation(mesh, [aniMove], 0, 2 * frameRate, false);
         });
     }
@@ -109,7 +176,7 @@ class Game {
         const finishA = new BABYLON.Vector3(0, -2.5, -0.2);
 
         // add cards to animate
-        let placeholder1 = this.createCard(startA);        
+        let placeholder1 = this.createCard(startA);
         let card1 = this.createCard(startA);
         
         // generate shadows
@@ -118,7 +185,7 @@ class Game {
         placeholder1.receiveShadows = true;
         board.receiveShadows = true;
 
-        this.animate(card1, finishA);
+        this.animate(card1, finishA, this.animatePlay);
     }
   
     doRender() : void {
